@@ -1,4 +1,4 @@
-use crate::{sprites::{StaticObstacle, rock::generate_rock}, components::Vector2};
+use crate::{sprites::{StaticObstacle, rock::generate_rock}, components::{Vector2, Vector3}};
 
 pub struct GameMap {
 	pub width: u32,
@@ -12,7 +12,7 @@ impl GameMap {
 		Self {
 			width,
 			height,
-			static_obstacles: Vec::from([generate_rock(Vector2::new(200, 200), Vector2::new(40, 20))]),
+			static_obstacles: Vec::from([generate_rock(Vector2::new(200, 200), Vector3::new(40, 20, 20))]),
 		}
 	}
 }

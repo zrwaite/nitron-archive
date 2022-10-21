@@ -10,7 +10,7 @@ mod player;
 mod sprites;
 mod game_map;
 
-use components::{Vector2, KeyboardControlled, KeyTracker};
+use components::{Vector2, KeyboardControlled, KeyTracker, Vector3};
 use player::Player;
 
 use sdl2::image::{self, LoadTexture, InitFlag};
@@ -52,11 +52,12 @@ fn main() -> Result<(), String> {
     let mut textures = HashMap::new();
     textures.insert(String::from(TEXTURES.player),texture_creator.load_texture(TEXTURES.player)?);
     textures.insert(String::from(TEXTURES.obstacles),texture_creator.load_texture(TEXTURES.obstacles)?);
+    textures.insert(String::from(TEXTURES.debug_box),texture_creator.load_texture(TEXTURES.debug_box)?);
 
     // Initialize resource
     let mut presses = KeyTracker::new();
 
-    let player = Player::new(Vector2::new(100, 100), Vector2::new(26, 36), String::from(TEXTURES.player));
+    let player = Player::new(Vector2::new(100, 100), Vector3::new(26, 36, 15), String::from(TEXTURES.player));
 
     let game = game::Game::new(400, 300, player);
 
@@ -80,7 +81,7 @@ fn main() -> Result<(), String> {
         world.maintain();
 
         // Render
-        renderer::render(&mut canvas, &textures, world.system_data())?;
+        renderer::render(&mut canvas, &textures, world.system_data(), true)?;
 
         // Time management
         ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));

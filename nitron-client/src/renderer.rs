@@ -7,6 +7,7 @@ use sdl2::pixels::Color;
 use sdl2::render::{WindowCanvas, Texture};
 
 use crate::game::Game;
+use crate::textures::TEXTURES;
 
 pub type SystemData<'a> = (
     ReadStorage<'a, Game>,
@@ -16,6 +17,7 @@ pub fn render(
     canvas: &mut WindowCanvas,
     textures: &HashMap<String, Texture>,
     data: SystemData,
+    debug: bool,
 ) -> Result<(), String> {
     canvas.set_draw_color(Color::RGB(0, 0, 0));
     canvas.clear();
@@ -41,6 +43,9 @@ pub fn render(
         (player.display.size.y as f64* y_scale) as u32,
     );
     canvas.copy(&textures[texture_key], current_frame, screen_rect)?;
+    if debug {
+        canvas.copy(&textures[TEXTURES.debug_box], Rect::new(0,  0, 24, 24), player.hitbox().get_scaled(x_scale, y_scale).to_rect())?;
+    }
 
     // iterate over all game map obstacles
     for obstacle in &game.map.static_obstacles {
@@ -57,6 +62,9 @@ pub fn render(
             (obstacle.display.size.y as f64* y_scale) as u32,
         );
         canvas.copy(&textures[texture_key], current_frame, screen_rect)?;
+        if debug {
+            canvas.copy(&textures[TEXTURES.debug_box], Rect::new(0,  0, 24, 24), obstacle.hitbox().get_scaled(x_scale, y_scale).to_rect())?;
+        }
     }
 
     canvas.present();

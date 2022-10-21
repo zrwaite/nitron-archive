@@ -1,5 +1,6 @@
 use crate::components::{Vector2, Direction};
 
+#[derive(Debug)]
 pub struct SpriteDisplay {
 	pub texture_key:String,
 	pub size: Vector2,
