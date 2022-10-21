@@ -2,7 +2,6 @@ use crate::components::{Vector2, Vector3, Vector4};
 use crate::physics::Hitbox;
 use crate::sprites::MovingSpriteDisplay;
 use super::PlayerAnimator;
-use sdl2::rect::Rect;
 
 pub struct Player {
 	pub display: MovingSpriteDisplay,
@@ -25,7 +24,7 @@ impl Player {
 			vel: Vector2::new(0, 0),
 			animator: PlayerAnimator::new(),
 			hitbox: Hitbox {
-				w: (size.x as f32 * 0.9) as u32,
+				w: (size.x as f32 * 0.6) as u32,
 				h: size.z as u32,
 				y_offset: size.y / 2 - size.z / 2,
 				x_offset: 0,

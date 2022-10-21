@@ -23,8 +23,8 @@ impl StaticObstacle {
 			display: SpriteDisplay::new(texture_key, size.to_vector2()),
 			pos,
 			hitbox: Hitbox {
-				w: size.x as u32,
-				h: size.z as u32,
+				w: (size.x as f32 * 0.7) as u32,
+				h: (size.z as f32 * 0.8) as u32,
 				y_offset: size.y / 2 - size.z / 2,
 				x_offset: 0,
 			},

@@ -12,7 +12,7 @@ impl GameMap {
 		Self {
 			width,
 			height,
-			static_obstacles: Vec::from([generate_rock(Vector2::new(200, 200), Vector3::new(40, 20, 20))]),
+			static_obstacles: Vec::from([generate_rock(Vector2::new(200, 200), Vector3::new(40, 20, 15))]),
 		}
 	}
 }

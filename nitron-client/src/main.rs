@@ -57,7 +57,7 @@ fn main() -> Result<(), String> {
     // Initialize resource
     let mut presses = KeyTracker::new();
 
-    let player = Player::new(Vector2::new(100, 100), Vector3::new(26, 36, 15), String::from(TEXTURES.player));
+    let player = Player::new(Vector2::new(100, 100), Vector3::new(26, 36, 10), String::from(TEXTURES.player));
 
     let game = game::Game::new(400, 300, player);
 
