@@ -13,16 +13,25 @@ mod game_map;
 use components::{Vector2, KeyboardControlled, KeyTracker, Vector3};
 use player::Player;
 
-use sdl2::image::{self, LoadTexture, InitFlag};
+use sdl2::image::{self, InitFlag};
 
 use specs::{WorldExt, Builder, SystemData};
 use specs::prelude::{DispatcherBuilder, World};
-use textures::TEXTURES;
+use textures::{TEXTURES, load_textures};
 
-use std::collections::HashMap;
+use std::env;
 use std::time::Duration;
 
 fn main() -> Result<(), String> {
+    let args: Vec<String> = env::args().collect();
+    let assets_prefix;
+    let binary_filepath = args[0].clone();
+    if binary_filepath == "target/debug/nitron-client" {
+        println!("Running in dev mode");
+        assets_prefix = "assets/".to_string();
+    } else {
+        assets_prefix = String::from(binary_filepath).replace("MacOS/nitron-client", "MacOS/assets/");
+    }
     let sdl_context = sdl2::init()?;
     let video_subsystem = sdl_context.video()?;
     let _image_context = image::init(InitFlag::PNG | InitFlag::JPG)?;
@@ -48,11 +57,7 @@ fn main() -> Result<(), String> {
 
     // initialize textures
     let texture_creator = canvas.texture_creator();
-
-    let mut textures = HashMap::new();
-    textures.insert(String::from(TEXTURES.player),texture_creator.load_texture(TEXTURES.player)?);
-    textures.insert(String::from(TEXTURES.obstacles),texture_creator.load_texture(TEXTURES.obstacles)?);
-    textures.insert(String::from(TEXTURES.debug_box),texture_creator.load_texture(TEXTURES.debug_box)?);
+    let textures = load_textures(assets_prefix, &texture_creator);
 
     // Initialize resource
     let mut presses = KeyTracker::new();
@@ -73,7 +78,6 @@ fn main() -> Result<(), String> {
         if input::handle_events(&mut event_pump, &mut presses) {
             break 'running;
         }
-
         *world.write_resource() = presses;
 
         // Update
