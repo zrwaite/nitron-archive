@@ -1,7 +1,7 @@
 mod physics;
 mod animation;
 mod controller;
-mod renderer;
+mod graphics;
 mod components;
 mod input;
 mod textures;
@@ -52,7 +52,7 @@ fn main() -> Result<(), String> {
 
     let mut world = World::new();
     dispatcher.setup(&mut world);
-    renderer::SystemData::setup(&mut world);
+    graphics::renderer::SystemData::setup(&mut world);
 
 
     // initialize textures
@@ -85,7 +85,7 @@ fn main() -> Result<(), String> {
         world.maintain();
 
         // Render
-        renderer::render(&mut canvas, &textures, world.system_data(), true)?;
+        graphics::renderer::render(&mut canvas, &textures, world.system_data(), true)?;
 
         // Time management
         ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
