@@ -7,6 +7,4 @@ python-dotenv
 bcrypt
 flask_cors
 apscheduler
-pylint-flask
-pylint-flask-sqlalchemy
 sqlalchemy-cockroachdb

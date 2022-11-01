@@ -2,7 +2,9 @@
 	"cSpell.words": [
 		"Nitron"
 	],
-	"python.linting.pylintEnabled": false,
-	"python.linting.pylamaEnabled": true,
-	"python.linting.enabled": true
+	"python.linting.enabled": true,
+	"files.exclude": {
+    	"**/__pycache__": true,
+	},
+	"python.linting.mypyEnabled": true
 }
