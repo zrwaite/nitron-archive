@@ -1,0 +1,12 @@
+flask
+ariadne
+flask-sqlalchemy
+flask-cors
+psycopg2-binary
+python-dotenv
+bcrypt
+flask_cors
+apscheduler
+pylint-flask
+pylint-flask-sqlalchemy
+sqlalchemy-cockroachdb

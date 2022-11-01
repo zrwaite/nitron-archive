@@ -1,0 +1,48 @@
+type User {
+	id: ID!
+	username: String!
+	email: String!
+	created_at: String!
+}
+
+type UserAuth {
+	user: User!
+	token: String!
+}
+
+input CreateUserInput {
+	username: String!
+	email: String!
+	password: String!
+}
+
+input UpdateUserInput {
+	username: String!
+	email: String
+	password: String
+}
+
+input LoginInput {
+	email: String!
+	password: String!
+}
+
+
+type Query {
+	hello: String!
+
+	listUsers: [User!]!
+	getUser(username: String!): User!
+}
+
+type Mutation {
+	createUser(data: CreateUserInput!): UserAuth!
+	login(data: LoginInput!): UserAuth!
+	updateUser(data: UpdateUserInput): User!
+	deleteUser(username: String!): Boolean!
+}
+
+schema {
+	query: Query
+	mutation: Mutation
+}

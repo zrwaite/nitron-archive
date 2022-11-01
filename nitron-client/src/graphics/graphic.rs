@@ -56,6 +56,7 @@ pub fn get_graphics(game: &Game, x_scale: f64, y_scale: f64) -> Vec<Graphic> {
 		z_index: hitbox.y,
 	});
 
+	// TODO make this more efficient: Don't sort very loop
 	graphics.sort_by(|a, b| a.z_index.partial_cmp(&b.z_index).unwrap());
 
 	graphics

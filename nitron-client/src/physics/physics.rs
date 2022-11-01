@@ -15,6 +15,7 @@ impl<'a> System<'a> for Physics {
         let game = (&mut data.0).join().next().unwrap();
         let player = &mut game.player;
         for obstacle in game.map.static_obstacles.iter_mut() {
+            //TODO Make this more efficient: Quad tree? 
             // collision detection
             collision::player_static_obstacle_collision(player, &mut obstacle.hitbox());
         }
