@@ -7,8 +7,6 @@ from api import app
 from api.queries.query import query
 from api.mutations.mutation import mutation
 
-# user = ObjectType('User')
-
 type_defs = load_schema_from_path("schema.graphql")
 schema = make_executable_schema(
     type_defs, query, mutation, snake_case_fallback_resolvers
