@@ -35,6 +35,12 @@ pub fn handle_events (event_pump: &mut EventPump, presses: &mut KeyTracker) -> b
 			Event::KeyUp { keycode: Some(Keycode::Down), repeat: false, .. } => {
 				presses.down = false;
 			},
+			Event::MouseMotion { timestamp, window_id, which, mousestate, x, y, xrel, yrel } => {
+				println!("{}, {}, {}, {:?}, {}, {}, {}, {}", timestamp, window_id, which, mousestate, x, y, xrel, yrel);
+			},
+			Event::MouseButtonDown { timestamp, window_id, which, mouse_btn, clicks, x, y } => {
+				println!("{}, {}, {}, {:?}, {}, {}, {}", timestamp, window_id, which, mouse_btn, clicks, x, y);
+			},
 			_ => {}
 		}
 	}

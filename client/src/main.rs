@@ -5,18 +5,17 @@ mod graphics;
 mod components;
 mod input;
 mod textures;
-mod game;
-mod player;
-mod sprites;
+mod entities;
 mod game_map;
+mod processor;
 
-use components::{Vector2, KeyboardControlled, KeyTracker, Vector3};
-use player::Player;
+use components::{Vector2, KeyTracker, Vector3};
+use crate::processor::ProcessorTrait;
+use entities::player::Player;
 
 use sdl2::image::{self, InitFlag};
 
-use specs::{WorldExt, Builder, SystemData};
-use specs::prelude::{DispatcherBuilder, World};
+use specs::{WorldExt};
 use textures::{TEXTURES, load_textures};
 
 use std::env;
@@ -43,17 +42,6 @@ fn main() -> Result<(), String> {
     // TODO set mimimum resize
 
     let mut canvas = window.into_canvas().build().expect("could not make a canvas");
-    
-    let mut dispatcher = DispatcherBuilder::new()
-        .with(controller::Controller, "Controller", &[])
-        .with(physics::Physics{}, "Physics", &["Controller"])
-        .with(animation::Animator, "Animator", &["Controller"])
-        .build();
-
-    let mut world = World::new();
-    dispatcher.setup(&mut world);
-    graphics::renderer::SystemData::setup(&mut world);
-
 
     // initialize textures
     let texture_creator = canvas.texture_creator();
@@ -62,15 +50,14 @@ fn main() -> Result<(), String> {
     // Initialize resource
     let mut presses = KeyTracker::new();
 
+    
+    
+
     let player = Player::new(Vector2::new(100, 100), Vector3::new(26, 36, 10), String::from(TEXTURES.player));
+    let mut game = processor::game::Game::new(400, 300, player, presses);
 
-    let game = game::Game::new(400, 300, player);
-
-    world.insert(presses);
-    world.create_entity()
-        .with(KeyboardControlled)
-        .with(game)
-        .build();
+    //clear world
+    // world.delete_all();
 
     let mut event_pump = sdl_context.event_pump()?;
     'running: loop {
@@ -78,15 +65,14 @@ fn main() -> Result<(), String> {
         if input::handle_events(&mut event_pump, &mut presses) {
             break 'running;
         }
-        *world.write_resource() = presses;
+        *game.processor.world.write_resource() = presses;
 
         // Update
-        dispatcher.dispatch(&mut world);
-        world.maintain();
+        game.processor.process();
 
         // Render
-        graphics::renderer::render(&mut canvas, &textures, world.system_data(), true)?;
-
+        game.render(&mut canvas, &textures)?;
+        
         // Time management
         ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
     }

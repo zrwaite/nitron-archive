@@ -3,27 +3,13 @@ use specs::prelude::{Component, VecStorage, NullStorage};
 use std::ops;
 use sdl2::rect::{Rect, Point};
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq)]
 pub enum Direction {
     Up,
     Down,
     Left,
     Right,
 }
-
-// #[derive(Component, Debug, Clone, Copy)]
-// #[storage(VecStorage)]
-// pub struct Vector2F {
-//     pub x: f32,
-//     pub y: f32,
-// }
-
-// impl Vector2F {
-//     pub fn new(x: f32, y: f32) -> Self {
-//         Self { x, y }
-//     }
-// }
-
 
 
 #[derive(Component, Debug, Clone, Copy)]
@@ -41,12 +27,6 @@ impl Vector2 {
         self.x += x;
         self.y += y;
     }
-    // pub fn get_scaled(&self, scale: f32) -> Vector2 {
-    //     Vector2 {
-    //         x: (self.x as f32 * scale) as i32,
-    //         y: (self.y as f32 * scale) as i32,
-    //     }
-    // }
 }
 
 impl ops::Add<Vector2> for Vector2 {

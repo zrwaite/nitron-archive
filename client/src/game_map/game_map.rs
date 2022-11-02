@@ -1,4 +1,5 @@
-use crate::{sprites::{StaticObstacle, rock::generate_rock}, components::{Vector2, Vector3}};
+use crate::entities::sprites::{StaticObstacle, rock::generate_rock};
+use crate::components::{Vector2, Vector3};
 
 pub struct GameMap {
 	pub width: u32,

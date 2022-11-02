@@ -1,4 +1,5 @@
-use crate::{components::{Vector4}, player::Player};
+use crate::components::{Vector4};
+use crate::entities::player::Player;
 
 #[derive(Debug, PartialEq)]
 pub enum CollisionResult {

@@ -1,6 +1,6 @@
 use sdl2::rect::{Rect, Point};
 
-use crate::game::Game;
+use crate::processor::{GameData};
 
 pub struct Graphic {
 	pub texture_key: String,
@@ -10,10 +10,10 @@ pub struct Graphic {
 	pub z_index: i32,
 }
 
-pub fn get_graphics(game: &Game, x_scale: f64, y_scale: f64) -> Vec<Graphic> {
+pub fn get_graphics(data: &GameData, x_scale: f64, y_scale: f64) -> Vec<Graphic> {
 	let mut graphics = Vec::new();
-	let player = &game.player;
-    for obstacle in &game.map.static_obstacles {
+	let player = &data.player;
+    for obstacle in &data.map.static_obstacles {
 		let texture_key = &obstacle.display.texture_key;
         let current_frame = obstacle.frame.region;
 		let hitbox = obstacle.hitbox();
@@ -35,7 +35,7 @@ pub fn get_graphics(game: &Game, x_scale: f64, y_scale: f64) -> Vec<Graphic> {
 		});
 	}
 
-	let texture_key = &game.player.display.texture_key;
+	let texture_key = &data.player.display.texture_key;
     let current_frame = player.animator.current_frame.region;
 	let hitbox = player.hitbox();
     let screen_position = Point::new((player.pos.x as f64 * x_scale) as i32 , (player.pos.y as f64 * y_scale) as i32);

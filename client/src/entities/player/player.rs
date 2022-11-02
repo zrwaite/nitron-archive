@@ -1,8 +1,13 @@
+use specs_derive::Component;
+use specs::Component;
+
 use crate::components::{Vector2, Vector3, Vector4};
 use crate::physics::Hitbox;
-use crate::sprites::MovingSpriteDisplay;
+use crate::entities::sprites::MovingSpriteDisplay;
 use super::PlayerAnimator;
+use specs::DenseVecStorage;
 
+#[derive(Component)]
 pub struct Player {
 	pub display: MovingSpriteDisplay,
 	pub pos: Vector2,

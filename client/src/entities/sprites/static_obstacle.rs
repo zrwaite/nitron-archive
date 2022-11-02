@@ -1,6 +1,8 @@
 use sdl2::rect::Rect;
 
-use crate::{components::{Vector2, Vector3, Vector4}, animation::AnimationFrame, physics::Hitbox};
+use crate::components::{Vector2, Vector3, Vector4};
+use crate::animation::AnimationFrame;
+use crate::physics::Hitbox;
 
 use super::SpriteDisplay;
 
