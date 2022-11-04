@@ -11,4 +11,4 @@ specs-derive = "*"
 [dependencies.sdl2]
 version = "*"
 default-features = false
-features = ["image"]
+features = ["image", "ttf"]

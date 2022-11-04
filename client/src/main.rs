@@ -4,7 +4,7 @@ mod controller;
 mod graphics;
 mod components;
 mod input;
-mod textures;
+mod assets;
 mod entities;
 mod game_map;
 mod processor;
@@ -16,7 +16,7 @@ use entities::player::Player;
 use sdl2::image::{self, InitFlag};
 
 use specs::{WorldExt};
-use textures::{TEXTURES, load_textures};
+use assets::{TEXTURES, load_textures, load_fonts};
 
 use std::env;
 use std::time::Duration;
@@ -32,6 +32,7 @@ fn main() -> Result<(), String> {
         assets_prefix = String::from(binary_filepath).replace("MacOS/nitron-client", "MacOS/assets/");
     }
     let sdl_context = sdl2::init()?;
+    let ttf_context = sdl2::ttf::init().map_err(|e| e.to_string())?;
     let video_subsystem = sdl_context.video()?;
     let _image_context = image::init(InitFlag::PNG | InitFlag::JPG)?;
     let window = video_subsystem.window("game tutorial", 800, 600)
@@ -45,13 +46,11 @@ fn main() -> Result<(), String> {
 
     // initialize textures
     let texture_creator = canvas.texture_creator();
-    let textures = load_textures(assets_prefix, &texture_creator);
+    let textures = load_textures(assets_prefix.clone(), &texture_creator);
+    let fonts = load_fonts(String::from(assets_prefix + "fonts/"), &ttf_context);
 
     // Initialize resource
     let mut presses = KeyTracker::new();
-
-    
-    
 
     let player = Player::new(Vector2::new(100, 100), Vector3::new(26, 36, 10), String::from(TEXTURES.player));
     let mut game = processor::game::Game::new(400, 300, player, presses);
@@ -71,7 +70,7 @@ fn main() -> Result<(), String> {
         game.processor.process();
 
         // Render
-        game.render(&mut canvas, &textures)?;
+        game.render(&mut canvas, &fonts, &textures)?;
         
         // Time management
         ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));

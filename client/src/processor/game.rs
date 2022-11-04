@@ -1,4 +1,5 @@
 use sdl2::render::{Texture, WindowCanvas};
+use sdl2::ttf::Font;
 use specs::{World, DispatcherBuilder};
 use specs::{WorldExt,Builder,Component};
 use specs_derive::Component;
@@ -66,7 +67,7 @@ impl ProcessorTrait for Game {
 		}
 	}
 
-	fn render(&mut self, canvas: &mut WindowCanvas, textures: &HashMap<String, Texture>) -> Result<(), String> {
-		graphics::renderer::render(canvas, &textures, self.processor.world.system_data(), true)
+	fn render(&mut self, canvas: &mut WindowCanvas, fonts: &HashMap<String, Font>, textures: &HashMap<String, Texture>) -> Result<(), String> {
+		graphics::renderer::render(canvas, &textures, &fonts, self.processor.world.system_data(), true)
 	}
 }

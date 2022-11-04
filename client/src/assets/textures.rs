@@ -3,17 +3,17 @@ use std::collections::HashMap;
 use sdl2::{render::{TextureCreator, Texture}, video::WindowContext};
 use sdl2::image::LoadTexture;
 
-pub struct Textures {
-	pub player: &'static str,
-	pub obstacles: &'static str,
-	pub debug_box: &'static str,
-	// pub game_map: GameMapTextures,
-}
-
 pub struct StringTextures {
 	pub player: String,
 	pub obstacles: String,
 	pub debug_box: String,
+	// pub game_map: GameMapTextures,
+}
+
+pub struct Textures {
+	pub player: &'static str,
+	pub obstacles: &'static str,
+	pub debug_box: &'static str,
 	// pub game_map: GameMapTextures,
 }
 

@@ -1,4 +1,5 @@
 use sdl2::render::{Texture, WindowCanvas};
+use sdl2::ttf::Font;
 use specs::{Dispatcher, World};
 use specs::{WorldExt,Component};
 use specs_derive::Component;
@@ -28,5 +29,5 @@ pub enum ProcessorData {
 
 pub trait ProcessorTrait {
 	fn new_processor(presses: KeyTracker, data: ProcessorData) -> Processor;
-	fn render(&mut self, canvas: &mut WindowCanvas, textures: &HashMap<String, Texture>) -> Result<(), String>;
+	fn render(&mut self, canvas: &mut WindowCanvas, fonts: &HashMap<String, Font>, textures: &HashMap<String, Texture>) -> Result<(), String>;
 }
