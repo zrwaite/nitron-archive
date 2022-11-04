@@ -26,6 +26,7 @@ impl Processor {
 #[derive(Component)]
 pub enum ProcessorData {
 	Game(GameData),
+	None
 }
 
 pub trait ProcessorTrait {

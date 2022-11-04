@@ -48,6 +48,7 @@ pub fn render(
                 }
             }
         }
+        ProcessorData::None => {}
     }
     // canvas.draw_rect(rect)
         

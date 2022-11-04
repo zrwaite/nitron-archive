@@ -36,6 +36,7 @@ impl<'a> System<'a> for Animator {
                 };
                 movement_animation.current_frame = frames[frame_index].clone(); 
             }
+            ProcessorData::None => {}
         }
     }
 }

@@ -41,6 +41,7 @@ impl<'a> System<'a> for Controller {
                         player.vel.x = 0;
                     }
                 }
+                ProcessorData::None => {}
             }
         }   
     }

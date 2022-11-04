@@ -5,18 +5,25 @@ use sdl2::{EventPump, render::{WindowCanvas, Texture}, ttf::Font};
 
 use crate::{input, components::KeyTracker, graphics};
 
-use super::Processor;
+use super::{Game, StartScreen};
 
-pub enum EngineState {
-	Start,
-	Running,
+pub enum Engine {
+	Start(StartScreen),
+	Running(Game),
 	Paused,
-	Stopped,
+	Quit,
 }
+
+// pub enum EngineState {
+// 	Start,
+// 	Running,
+// 	Paused,
+// 	Stopped,
+// }
 
 
 pub fn run_engine(
-	processor: &mut Processor, 
+	mut engine: &mut Engine, 
 	mut event_pump: &mut EventPump, 
 	mut presses: KeyTracker,
 	canvas: &mut WindowCanvas,
@@ -24,6 +31,12 @@ pub fn run_engine(
 	fonts: &HashMap<String, Font>,
 ) -> Result<(), String> {
 	'running: loop {
+		let processor = match engine {
+			Engine::Start(start_screen) => &mut start_screen.processor,
+			Engine::Running(game) => &mut game.processor,
+			Engine::Paused => break,
+			Engine::Quit => break,
+		};
 
 		// Handle input events
 		if input::handle_events(&mut event_pump, &mut presses) {

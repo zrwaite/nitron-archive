@@ -35,6 +35,7 @@ impl<'a> System<'a> for Physics {
                     player.set_y_by_hitbox(game.map.height as i32 - hitbox.h / 2);
                 }
             }
+            ProcessorData::None => {}
         }
 
 
