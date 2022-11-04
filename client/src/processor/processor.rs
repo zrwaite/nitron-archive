@@ -7,12 +7,16 @@ use std::collections::HashMap;
 use specs::DenseVecStorage;
 
 use crate::components::{KeyTracker};
+use crate::ui::UIElement;
 
 use super::GameData;
 
 pub struct Processor {
 	pub dispatcher: Dispatcher<'static, 'static>,
 	pub world: World,
+	pub ui_elements: Vec<UIElement>,
+	pub width: u32,
+	pub height: u32,
 }
 
 impl Processor {
@@ -28,6 +32,6 @@ pub enum ProcessorData {
 }
 
 pub trait ProcessorTrait {
-	fn new_processor(presses: KeyTracker, data: ProcessorData) -> Processor;
+	fn new_processor(presses: KeyTracker, data: ProcessorData, width: u32, height: u32) -> Processor;
 	fn render(&mut self, canvas: &mut WindowCanvas, fonts: &HashMap<String, Font>, textures: &HashMap<String, Texture>) -> Result<(), String>;
 }

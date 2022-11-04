@@ -2,6 +2,14 @@ use sdl2::rect::{Rect, Point};
 
 use crate::processor::{GameData};
 
+pub fn scale(n: i32, scale: f64) -> i32 {
+	(n as f64* scale) as i32
+}
+
+pub fn scale_u(n: i32, scale: f64) -> u32 {
+	(n as f64 * scale) as u32
+}
+
 pub struct Graphic {
 	pub texture_key: String,
 	pub src: Rect, 
@@ -17,14 +25,13 @@ pub fn get_graphics(data: &GameData, x_scale: f64, y_scale: f64) -> Vec<Graphic>
 		let texture_key = &obstacle.display.texture_key;
         let current_frame = obstacle.frame.region;
 		let hitbox = obstacle.hitbox();
-        let screen_position = Point::new((obstacle.pos.x as f64 * x_scale) as i32 , (obstacle.pos.y as f64 * y_scale) as i32);
         let screen_rect = Rect::from_center(
             Point::new(
-                screen_position.x(),
-                screen_position.y(),
+				scale(obstacle.pos.x, x_scale),
+				scale(obstacle.pos.y, y_scale),
             ),
-            (obstacle.display.size.x as f64 * x_scale) as u32,
-            (obstacle.display.size.y as f64* y_scale) as u32,
+			scale_u(obstacle.display.size.x, x_scale),
+			scale_u(obstacle.display.size.y, y_scale),
         );
 		graphics.push(Graphic {
 			texture_key: texture_key.to_string(),
@@ -38,14 +45,13 @@ pub fn get_graphics(data: &GameData, x_scale: f64, y_scale: f64) -> Vec<Graphic>
 	let texture_key = &data.player.display.texture_key;
     let current_frame = player.animator.current_frame.region;
 	let hitbox = player.hitbox();
-    let screen_position = Point::new((player.pos.x as f64 * x_scale) as i32 , (player.pos.y as f64 * y_scale) as i32);
     let screen_rect = Rect::from_center(
         Point::new(
-            screen_position.x(),
-            screen_position.y(),
+			scale(player.pos.x, x_scale),
+			scale(player.pos.y, y_scale),
         ),
-        (player.display.size.x as f64 * x_scale) as u32,
-        (player.display.size.y as f64* y_scale) as u32,
+		scale_u(player.display.size.x, x_scale),
+		scale_u(player.display.size.y, y_scale),
     );
 
 	graphics.push(Graphic {

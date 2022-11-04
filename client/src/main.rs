@@ -8,6 +8,7 @@ mod assets;
 mod entities;
 mod game_map;
 mod processor;
+mod ui;
 
 use components::{Vector2, KeyTracker, Vector3};
 use crate::processor::ProcessorTrait;

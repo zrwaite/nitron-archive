@@ -1,9 +1,11 @@
 use sdl2::render::{Texture, WindowCanvas};
+use sdl2::pixels::Color;
 use sdl2::ttf::Font;
 use specs::{World, DispatcherBuilder};
 use specs::{WorldExt,Builder,Component};
 use specs_derive::Component;
 use crate::entities::Entity;
+use crate::ui::{TextElement, UIElement};
 use crate::{entities::player::Player, game_map::GameMap};
 use std::collections::HashMap;
 use specs::DenseVecStorage;
@@ -38,7 +40,7 @@ impl Game {
 			entities: vec![],
 			player,
 		};
-		let processor = Game::new_processor(presses, ProcessorData::Game(data));
+		let processor = Game::new_processor(presses, ProcessorData::Game(data), game_width, game_height);
 		Self {
 			processor,
 		}
@@ -47,7 +49,7 @@ impl Game {
 
 
 impl ProcessorTrait for Game {
-	fn new_processor(presses: KeyTracker, data: ProcessorData) -> Processor {
+	fn new_processor(presses: KeyTracker, data: ProcessorData, width: u32, height: u32) -> Processor {
 		let mut dispatcher =  DispatcherBuilder::new()
 			.with(controller::Controller, "Controller", &[])
 			.with(physics::Physics{}, "Physics", &["Controller"])
@@ -61,13 +63,28 @@ impl ProcessorTrait for Game {
 			.with(KeyboardControlled)
 			.with(data)
 			.build();
+		
 		Processor {
 			dispatcher,
 			world,
+			ui_elements: vec![
+				UIElement::Text(TextElement::new_normal("Hello World".to_string(), 30, Color::RGB(255, 255, 255), width as i32/2, height as i32/2))
+			],
+			width,
+			height,
 		}
 	}
 
 	fn render(&mut self, canvas: &mut WindowCanvas, fonts: &HashMap<String, Font>, textures: &HashMap<String, Texture>) -> Result<(), String> {
-		graphics::renderer::render(canvas, &textures, &fonts, self.processor.world.system_data(), true)
+		graphics::renderer::render(
+			canvas, 
+			&textures, 
+			&fonts, 
+			&self.processor.ui_elements, 
+			self.processor.world.system_data(), 
+			self.processor.width,
+			self.processor.height,
+			true
+		)
 	}
 }
