@@ -1,9 +1,6 @@
-use sdl2::render::{Texture, WindowCanvas};
-use sdl2::ttf::Font;
 use specs::{Dispatcher, World};
 use specs::{WorldExt,Component};
 use specs_derive::Component;
-use std::collections::HashMap;
 use specs::DenseVecStorage;
 
 use crate::components::{KeyTracker};
@@ -33,5 +30,4 @@ pub enum ProcessorData {
 
 pub trait ProcessorTrait {
 	fn new_processor(presses: KeyTracker, data: ProcessorData, width: u32, height: u32) -> Processor;
-	fn render(&mut self, canvas: &mut WindowCanvas, fonts: &HashMap<String, Font>, textures: &HashMap<String, Texture>) -> Result<(), String>;
 }

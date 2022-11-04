@@ -1,13 +1,10 @@
-use sdl2::render::{Texture, WindowCanvas};
 use sdl2::pixels::Color;
-use sdl2::ttf::Font;
 use specs::{World, DispatcherBuilder};
 use specs::{WorldExt,Builder,Component};
 use specs_derive::Component;
 use crate::entities::Entity;
 use crate::ui::{TextElement, UIElement};
 use crate::{entities::player::Player, game_map::GameMap};
-use std::collections::HashMap;
 use specs::DenseVecStorage;
 use specs::SystemData;
 
@@ -45,6 +42,7 @@ impl Game {
 			processor,
 		}
 	}
+	
 }
 
 
@@ -75,16 +73,15 @@ impl ProcessorTrait for Game {
 		}
 	}
 
-	fn render(&mut self, canvas: &mut WindowCanvas, fonts: &HashMap<String, Font>, textures: &HashMap<String, Texture>) -> Result<(), String> {
-		graphics::renderer::render(
-			canvas, 
-			&textures, 
-			&fonts, 
-			&self.processor.ui_elements, 
-			self.processor.world.system_data(), 
-			self.processor.width,
-			self.processor.height,
-			true
-		)
+	// fn render(&mut self, canvas: &mut WindowCanvas, fonts: &HashMap<String, Font>, textures: &HashMap<String, Texture>) -> Result<(), String> {
+	// 	graphics::renderer::render(
+	// 		canvas, 
+	// 		&textures, 
+	// 		&fonts, 
+	// 		&self.processor.ui_elements, 
+	// 		self.processor.world.system_data(), 
+	// 		self.processor.width,
+	// 		self.processor.height,
+	// 		true
+	// 	)
 	}
-}

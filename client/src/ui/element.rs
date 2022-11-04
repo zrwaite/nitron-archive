@@ -1,4 +1,4 @@
-use sdl2::pixels::Color;
+use sdl2::{pixels::Color, rect::Rect};
 
 use crate::assets::FONTS;
 
@@ -8,6 +8,12 @@ pub struct UIStyles {
 	pub x: i32,
 	pub y: i32,
 	pub padding: u32,
+}
+
+pub struct ClickActions {
+	pub enabled: bool,
+	pub on_click: fn(),
+	pub on_hover: fn(),
 }
 
 pub struct TextElement {
@@ -40,7 +46,17 @@ pub struct ImageElement {
 	pub styles: UIStyles,
 }
 
+pub struct BoxElement {
+	pub elements: Vec<UIElement>,
+	pub rect: Rect,
+	pub styles: UIStyles,
+	pub click_actions: ClickActions,
+	pub color: Color,
+}
+
 pub enum UIElement {
 	Text(TextElement),
 	Image(ImageElement),
+	Box(BoxElement),
 }
+

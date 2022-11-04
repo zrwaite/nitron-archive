@@ -83,6 +83,10 @@ pub fn render(
                 let dst = Rect::from_center(Point::new(x as i32, y as i32), width, height);
                 canvas.copy(&texture, None, dst)?;
             }
+            UIElement::Box(box_element) => {
+                canvas.set_draw_color(box_element.color);
+                canvas.fill_rect(box_element.rect)?;
+            }
         }
     }
 

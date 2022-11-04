@@ -10,17 +10,16 @@ mod game_map;
 mod processor;
 mod ui;
 
+use std::env;
+
 use components::{Vector2, KeyTracker, Vector3};
-use crate::processor::ProcessorTrait;
+use processor::{run_engine, EngineState, Game};
 use entities::player::Player;
 
 use sdl2::image::{self, InitFlag};
 
-use specs::{WorldExt};
 use assets::{TEXTURES, load_textures, load_fonts};
 
-use std::env;
-use std::time::Duration;
 
 fn main() -> Result<(), String> {
     let args: Vec<String> = env::args().collect();
@@ -43,6 +42,8 @@ fn main() -> Result<(), String> {
     .expect("could not initialize video subsystem");
     // TODO set mimimum resize
 
+    let mut engine_state = EngineState::Start;
+
     let mut canvas = window.into_canvas().build().expect("could not make a canvas");
 
     // initialize textures
@@ -50,32 +51,63 @@ fn main() -> Result<(), String> {
     let textures = load_textures(assets_prefix.clone(), &texture_creator);
     let fonts = load_fonts(String::from(assets_prefix + "fonts/"), &ttf_context);
 
-    // Initialize resource
-    let mut presses = KeyTracker::new();
+// pub static mut engine_state:EngineState = EngineState::Start;
 
-    let player = Player::new(Vector2::new(100, 100), Vector3::new(26, 36, 10), String::from(TEXTURES.player));
-    let mut game = processor::game::Game::new(400, 300, player, presses);
+    // Initialize resource
+    let presses = KeyTracker::new();
+
+
+    let mut player: Player;
+    let mut game: Option<Game> = None;
+
+    
+    // let mut processor = game.processor;
 
     //clear world
     // world.delete_all();
 
     let mut event_pump = sdl_context.event_pump()?;
-    'running: loop {
-        // Handle input events
-        if input::handle_events(&mut event_pump, &mut presses) {
-            break 'running;
-        }
-        *game.processor.world.write_resource() = presses;
 
-        // Update
-        game.processor.process();
-
-        // Render
-        game.render(&mut canvas, &fonts, &textures)?;
-        
-        // Time management
-        ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
+    'engine: loop {
+        match engine_state {
+            EngineState::Start => {
+                // run_engine(
+                //     &mut game.processor, 
+                //     &mut event_pump, 
+                //     game.presses, 
+                //     &mut canvas, 
+                //     &textures, 
+                //     &fonts
+                // )?;
+                player = Player::new(Vector2::new(100, 100), Vector3::new(26, 36, 10), String::from(TEXTURES.player));
+                game = Some(processor::game::Game::new(400, 300, player, presses));
+                engine_state = EngineState::Running;
+            },
+            EngineState::Running => {
+                run_engine(
+                    &mut game.expect("Game not initialized").processor, 
+                    &mut event_pump, 
+                    presses,
+                    &mut canvas, 
+                    &textures, 
+                    &fonts, 
+                )?;
+                return Ok(());
+            },
+            EngineState::Paused => {
+                // run_engine(
+                //     &mut game.processor, 
+                //     &mut event_pump, 
+                //     game.presses, 
+                //     &mut canvas, 
+                //     &textures, 
+                //     &fonts
+                // )?;
+            },
+            EngineState::Stopped => {
+                break 'engine;
+            }
+        } 
     }
-
     Ok(())
 }
