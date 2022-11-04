@@ -21,16 +21,21 @@ pub enum Engine {
 // 	Stopped,
 // }
 
+pub enum EngineEvent {
+	Quit,
+	Play
+}
+
 
 pub fn run_engine(
-	mut engine: &mut Engine, 
+	engine: &mut Engine, 
 	mut event_pump: &mut EventPump, 
 	mut presses: KeyTracker,
 	canvas: &mut WindowCanvas,
 	textures: &HashMap<String, Texture>,
 	fonts: &HashMap<String, Font>,
-) -> Result<(), String> {
-	'running: loop {
+) -> Result<EngineEvent, String> {
+	loop {
 		let processor = match engine {
 			Engine::Start(start_screen) => &mut start_screen.processor,
 			Engine::Running(game) => &mut game.processor,
@@ -39,8 +44,8 @@ pub fn run_engine(
 		};
 
 		// Handle input events
-		if input::handle_events(&mut event_pump, &mut presses) {
-			break 'running;
+		if input::handle_events(&mut event_pump, &mut presses, &mut processor.ui_elements) {
+			return Ok(EngineEvent::Quit);
 		}
 		*processor.world.write_resource() = presses;
 	
@@ -48,7 +53,6 @@ pub fn run_engine(
 		processor.process();
 	
 		// Render
-	
 		graphics::renderer::render(
 			canvas, 
 			&textures, 
@@ -59,11 +63,9 @@ pub fn run_engine(
 			processor.height,
 			true
 		)?;
-	
-		// render(canvas, fonts, textures)?;
 		
 		// Time management
 		::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
 	}
-	Ok(())
+	Ok(EngineEvent::Quit)
 }

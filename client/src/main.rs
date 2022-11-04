@@ -13,7 +13,7 @@ mod ui;
 use std::env;
 
 use components::{Vector2, KeyTracker, Vector3};
-use processor::{run_engine, Game, StartScreen, Engine};
+use processor::{run_engine, Game, StartScreen, Engine, EngineEvent};
 use entities::player::Player;
 
 use sdl2::image::{self, InitFlag};
@@ -76,7 +76,7 @@ fn main() -> Result<(), String> {
     'engine: loop {
         match engine {
             Engine::Start(start_screen) => {
-                run_engine(
+                let event_event = run_engine(
                     &mut Engine::Start(start_screen), 
                     &mut event_pump, 
                     presses, 
@@ -84,9 +84,16 @@ fn main() -> Result<(), String> {
                     &textures, 
                     &fonts
                 )?;
-                let player = Player::new(Vector2::new(100, 100), Vector3::new(26, 36, 10), String::from(TEXTURES.player));
-                let game = Game::new(400, 300, player, presses);
-                engine = Engine::Running(game);
+
+                match event_event {
+                    EngineEvent::Quit => break 'engine,
+                    EngineEvent::Play => {
+                        let player = Player::new(Vector2::new(100, 100), Vector3::new(26, 36, 10), String::from(TEXTURES.player));
+                        let game = Game::new(400, 300, player, presses);
+                        engine = Engine::Running(game);
+                    }
+                }
+                
             },
             Engine::Running(game) => {
                 run_engine(
