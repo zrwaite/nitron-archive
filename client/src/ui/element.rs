@@ -1,6 +1,6 @@
 use sdl2::{pixels::Color, rect::Rect};
 
-use crate::assets::FONTS;
+use crate::{assets::FONTS, processor::EngineEvent, graphics::{scale, scale_u}};
 
 pub struct UIStyles {
 	pub width: u32,
@@ -10,10 +10,10 @@ pub struct UIStyles {
 	pub padding: u32,
 }
 
-#[derive(Clone)]
 pub struct MouseDetails {
 	pub hovering: bool,
 	pub clicked: bool,
+	pub on_click: EngineEvent,
 }
 
 pub struct TextElement {
@@ -53,13 +53,9 @@ pub struct BoxElement {
 	pub color: Color,
 }
 
-static DEFAULT_MOUSE_DETAILS: MouseDetails = MouseDetails {
-	hovering: false,
-	clicked: false,
-};
 
 impl BoxElement {
-	pub fn simple_new(elements: Vec<UIElement>, rect: Rect, color: Color) -> BoxElement {
+	pub fn simple_new(elements: Vec<UIElement>, rect: Rect, color: Color, on_click: EngineEvent) -> BoxElement {
 		BoxElement {
 			elements,
 			styles: UIStyles {
@@ -69,12 +65,52 @@ impl BoxElement {
 				y: rect.y(),
 				padding: 0,
 			},
-			mouse_details: DEFAULT_MOUSE_DETAILS.clone(),
 			color,
+			mouse_details: MouseDetails {
+				hovering: false,
+				clicked: false,
+				on_click,
+			},
 		}
 	}
+	pub fn new(
+		elements: Vec<UIElement>, 
+		rect: Rect, 
+		color: Color, 
+		on_click: EngineEvent,
+	) -> BoxElement {
+		BoxElement {
+			elements,
+			styles: UIStyles {
+				width: rect.width(),
+				height: rect.height(),
+				x: rect.x(),
+				y: rect.y(),
+				padding: 0,
+			},
+			color,
+			mouse_details: MouseDetails {
+				hovering: false,
+				clicked: false,
+				on_click,
+			},
+		}
+	}
+	pub fn get_scaled_rect(&self, x_scale: f64, y_scale: f64) -> Rect {
+		Rect::new(
+			scale(self.styles.x, x_scale), 
+			scale(self.styles.y, y_scale),
+			scale_u(self.styles.width as i32, x_scale),
+			scale_u(self.styles.height as i32, y_scale),
+		)
+	}
 	pub fn get_rect(&self) -> Rect {
-		Rect::new(self.styles.x, self.styles.y, self.styles.width, self.styles.height)
+		Rect::new(
+			self.styles.x, 
+			self.styles.y,
+			self.styles.width,
+			self.styles.height,
+		)
 	}
 	pub fn contains_point(&self, x: i32, y: i32) -> bool {
 		self.get_rect().contains_point((x, y))

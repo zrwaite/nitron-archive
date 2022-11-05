@@ -14,16 +14,10 @@ pub enum Engine {
 	Quit,
 }
 
-// pub enum EngineState {
-// 	Start,
-// 	Running,
-// 	Paused,
-// 	Stopped,
-// }
-
 pub enum EngineEvent {
 	Quit,
-	Play
+	Play,
+	None
 }
 
 
@@ -43,10 +37,25 @@ pub fn run_engine(
 			Engine::Quit => break,
 		};
 
+		let (screen_width, screen_height) = canvas.output_size()?;
+
+		let x_scale = screen_width as f64 / processor.width as f64;
+		let y_scale = screen_height as f64 / processor.height as f64;
+
 		// Handle input events
-		if input::handle_events(&mut event_pump, &mut presses, &mut processor.ui_elements) {
-			return Ok(EngineEvent::Quit);
+		match input::handle_events(
+			&mut event_pump, 
+			&mut presses, 
+			&mut processor.ui_elements,
+			x_scale,
+			y_scale
+		) {
+			EngineEvent::Quit => return Ok(EngineEvent::Quit),
+			EngineEvent::Play => return Ok(EngineEvent::Play),
+			EngineEvent::None => (),
 		}
+
+
 		*processor.world.write_resource() = presses;
 	
 		// Update
@@ -69,3 +78,4 @@ pub fn run_engine(
 	}
 	Ok(EngineEvent::Quit)
 }
+

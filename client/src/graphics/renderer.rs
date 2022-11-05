@@ -5,10 +5,8 @@ use specs::Join;
 use specs::prelude::{ReadStorage};
 use sdl2::pixels::Color;
 use sdl2::render::{WindowCanvas, Texture};
-use sdl2::rect::{Rect};
 
 use crate::processor::{ProcessorData};
-use crate::assets::{TEXTURES};
 use crate::ui::UIElement;
 
 use super::ui_graphics::render_ui_element;
@@ -44,7 +42,8 @@ pub fn render(
             for graphic in graphics {
                 canvas.copy(&textures[&graphic.texture_key], graphic.src, graphic.dst)?;
                 if debug {
-                    canvas.copy(&textures[TEXTURES.debug_box], Rect::new(0,  0, 24, 24), graphic.hitbox_dst)?;
+                    canvas.set_draw_color(Color::RGB(255, 0, 0));
+                    canvas.draw_rect(graphic.hitbox_dst)?;
                 }
             }
         }

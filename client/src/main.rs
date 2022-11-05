@@ -92,6 +92,9 @@ fn main() -> Result<(), String> {
                         let game = Game::new(400, 300, player, presses);
                         engine = Engine::Running(game);
                     }
+                    EngineEvent::None => {
+                        panic!("ended start screen without follow up event")
+                    }
                 }
                 
             },

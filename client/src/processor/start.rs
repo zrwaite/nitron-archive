@@ -1,5 +1,5 @@
 use sdl2::pixels::Color;
-use sdl2::rect::Rect;
+use sdl2::rect::{Rect, Point};
 use specs::{World, DispatcherBuilder};
 use specs::{WorldExt,Builder};
 use crate::ui::{TextElement, UIElement, BoxElement};
@@ -8,7 +8,7 @@ use specs::SystemData;
 use crate::components::{KeyboardControlled, KeyTracker};
 use crate::{controller, animation, graphics};
 
-use super::{Processor, ProcessorTrait, ProcessorData};
+use super::{Processor, ProcessorTrait, ProcessorData, EngineEvent};
 
 pub struct StartScreen {
 	pub processor: Processor,
@@ -49,12 +49,15 @@ impl ProcessorTrait for StartScreen {
 			dispatcher,
 			world,
 			ui_elements: vec![
-				UIElement::Box(BoxElement::simple_new(
+				UIElement::Box(BoxElement::new(
 					vec![
-						UIElement::Text(TextElement::simple_new("Hello World".to_string(), 30, Color::RGB(255, 255, 255), width as i32/2, height as i32/2))
+						UIElement::Text(TextElement::simple_new(
+							"Start".to_string(), 30, Color::RGB(255, 255, 255), width as i32/2, height as i32/2
+						))
 					],
-					Rect::new(0, 0, width, height),
+					Rect::from_center(Point::new(width as i32/2, height as i32/2), 80, 40),
 					Color::RGB(0, 255, 255),
+					EngineEvent::Play,
 				))
 			],
 			width,

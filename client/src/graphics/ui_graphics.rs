@@ -46,7 +46,7 @@ pub fn render_ui_element(
 		}
 		UIElement::Box(box_element) => {
 			canvas.set_draw_color(box_element.color);
-			canvas.fill_rect(box_element.get_rect())?;
+			canvas.fill_rect(box_element.get_scaled_rect(x_scale, y_scale))?;
 			for child in &box_element.elements {
 				render_ui_element(canvas, child, textures, fonts, x_scale, y_scale)?;
 			}

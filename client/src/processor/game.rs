@@ -1,8 +1,6 @@
-use sdl2::pixels::Color;
 use specs::{World, DispatcherBuilder};
 use specs::{WorldExt,Builder};
 use crate::entities::Entity;
-use crate::ui::{TextElement, UIElement};
 use crate::{entities::player::Player, game_map::GameMap};
 use specs::SystemData;
 
