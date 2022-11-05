@@ -17,6 +17,7 @@ pub enum Engine {
 pub enum EngineEvent {
 	Quit,
 	Play,
+	CustomEvent(String),
 	None
 }
 
@@ -52,6 +53,9 @@ pub fn run_engine(
 		) {
 			EngineEvent::Quit => return Ok(EngineEvent::Quit),
 			EngineEvent::Play => return Ok(EngineEvent::Play),
+			EngineEvent::CustomEvent(event) => {
+				return Ok(EngineEvent::CustomEvent(event))
+			}
 			EngineEvent::None => (),
 		}
 

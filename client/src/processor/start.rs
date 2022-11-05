@@ -2,7 +2,7 @@ use sdl2::pixels::Color;
 use sdl2::rect::{Rect, Point};
 use specs::{World, DispatcherBuilder};
 use specs::{WorldExt,Builder};
-use crate::ui::{TextElement, UIElement, BoxElement};
+use crate::ui::components::create_text_button;
 use specs::SystemData;
 
 use crate::components::{KeyboardControlled, KeyTracker};
@@ -49,16 +49,12 @@ impl ProcessorTrait for StartScreen {
 			dispatcher,
 			world,
 			ui_elements: vec![
-				UIElement::Box(BoxElement::new(
-					vec![
-						UIElement::Text(TextElement::simple_new(
-							"Start".to_string(), 30, Color::RGB(255, 255, 255), width as i32/2, height as i32/2
-						))
-					],
+				create_text_button(
 					Rect::from_center(Point::new(width as i32/2, height as i32/2), 80, 40),
-					Color::RGB(0, 255, 255),
+					Color::RGB(0, 200, 150),
 					EngineEvent::Play,
-				))
+					"Start".to_string(),
+				),
 			],
 			width,
 			height,

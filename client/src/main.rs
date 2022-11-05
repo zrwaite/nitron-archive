@@ -9,6 +9,7 @@ mod entities;
 mod game_map;
 mod processor;
 mod ui;
+mod events;
 
 use std::env;
 
@@ -16,7 +17,7 @@ use components::{Vector2, KeyTracker, Vector3};
 use processor::{run_engine, Game, StartScreen, Engine, EngineEvent};
 use entities::player::Player;
 
-use sdl2::image::{self, InitFlag};
+use sdl2::{image::{self, InitFlag}, mouse::Cursor};
 
 use assets::{TEXTURES, load_textures, load_fonts};
 
@@ -49,8 +50,6 @@ fn main() -> Result<(), String> {
     let textures = load_textures(assets_prefix.clone(), &texture_creator);
     let fonts = load_fonts(String::from(assets_prefix + "fonts/"), &ttf_context);
 
-// pub static mut engine_state:EngineState = EngineState::Start;
-
     // Initialize resource
     let presses = KeyTracker::new();
 
@@ -59,17 +58,6 @@ fn main() -> Result<(), String> {
             400, 300, presses
         )   
     );
-
-
-    // let mut player: Player;
-    // let mut game: Option<Game> = None;
-
-    // let start_screen: Option<StartScreen> = Some();
-    
-    // let mut processor = game.processor;
-
-    //clear world
-    // world.delete_all();
 
     let mut event_pump = sdl_context.event_pump()?;
 
@@ -89,9 +77,12 @@ fn main() -> Result<(), String> {
                     EngineEvent::Quit => break 'engine,
                     EngineEvent::Play => {
                         let player = Player::new(Vector2::new(100, 100), Vector3::new(26, 36, 10), String::from(TEXTURES.player));
-                        let game = Game::new(400, 300, player, presses);
+                        let game = Game::new(800, 600, player, presses);
                         engine = Engine::Running(game);
                     }
+                    EngineEvent::CustomEvent(_) => {
+                        panic!("ended start screen with custom event")
+                    },
                     EngineEvent::None => {
                         panic!("ended start screen without follow up event")
                     }

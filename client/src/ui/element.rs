@@ -8,6 +8,7 @@ pub struct UIStyles {
 	pub x: i32,
 	pub y: i32,
 	pub padding: u32,
+	pub border_color: Color,
 }
 
 pub struct MouseDetails {
@@ -24,8 +25,8 @@ pub struct TextElement {
 	pub styles: UIStyles,
 }
 impl TextElement {
-	pub fn simple_new(text: String, font_size: u16, font_color: Color, x: i32, y: i32) -> Self {
-		Self {
+	pub fn simple_new(text: String, font_size: u16, font_color: Color, x: i32, y: i32) -> UIElement {
+		UIElement::Text(Self {
 			text,
 			font: FONTS.electrolize.to_string(),
 			font_size,
@@ -36,8 +37,9 @@ impl TextElement {
 				x,
 				y,
 				padding: 0,
+				border_color: Color::RGBA(0, 0, 0, 0),
 			},
-		}
+		})
 	}
 }
 
@@ -64,6 +66,7 @@ impl BoxElement {
 				x: rect.x(),
 				y: rect.y(),
 				padding: 0,
+				border_color: Color::RGBA(0, 0, 0, 0),
 			},
 			color,
 			mouse_details: MouseDetails {
@@ -77,6 +80,7 @@ impl BoxElement {
 		elements: Vec<UIElement>, 
 		rect: Rect, 
 		color: Color, 
+		border_color: Color,
 		on_click: EngineEvent,
 	) -> BoxElement {
 		BoxElement {
@@ -87,6 +91,7 @@ impl BoxElement {
 				x: rect.x(),
 				y: rect.y(),
 				padding: 0,
+				border_color,
 			},
 			color,
 			mouse_details: MouseDetails {
@@ -97,9 +102,10 @@ impl BoxElement {
 		}
 	}
 	pub fn get_scaled_rect(&self, x_scale: f64, y_scale: f64) -> Rect {
-		Rect::new(
-			scale(self.styles.x, x_scale), 
-			scale(self.styles.y, y_scale),
+		Rect::from_center((
+				scale(self.styles.x, x_scale), 
+				scale(self.styles.y, y_scale),
+			),
 			scale_u(self.styles.width as i32, x_scale),
 			scale_u(self.styles.height as i32, y_scale),
 		)

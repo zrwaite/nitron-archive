@@ -45,17 +45,13 @@ pub fn handle_events (
 				presses.down = false;
 			},
 			Event::MouseMotion { timestamp, window_id, which, mousestate, x, y, xrel, yrel } => {
-				println!("{}, {}", x, y);
-				println!("{}, {}", scale(x,x_scale), scale(y,y_scale));
 				for ui_element in ui_elements.iter_mut() {
 					match ui_element {
 						UIElement::Box(box_element) => {
 							if box_element.contains_point(scale(x, 1.0/x_scale),scale(y, 1.0/y_scale)) {
 								box_element.mouse_details.hovering= true;
-								println!("hovering");
 							} else {
 								box_element.mouse_details.hovering= false;
-								// println!("not hovering");
 							}
 						},
 						_ => {}
