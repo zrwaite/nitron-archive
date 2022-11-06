@@ -8,7 +8,7 @@ from .query import query
 
 def list_users():
     try:
-        users = [user.to_dict() for user in User.query.all()]
+        users = User.query.all()
         return users
     except Exception as error:
         raise APIError(str(error))
@@ -16,7 +16,7 @@ def list_users():
 
 @query.field('listUsers')
 def list_users_resolver(obj, info):
-    return listUsers()
+    return list_users()
 
 
 @convert_kwargs_to_snake_case

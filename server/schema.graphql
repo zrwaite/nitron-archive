@@ -27,12 +27,21 @@ input LoginInput {
 	password: String!
 }
 
+type Emotions {
+  angry: Float!
+  fear: Float!
+  happy: Float!
+  sad: Float!
+  surprise: Float!
+}
 
 type Query {
 	hello: String!
 
 	listUsers: [User!]!
 	getUser(username: String!): User!
+
+	getEmotions(text: String!): Emotions!
 }
 
 type Mutation {
