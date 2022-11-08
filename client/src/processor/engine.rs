@@ -3,7 +3,7 @@ use std::{collections::HashMap, time::Duration};
 use specs::WorldExt;
 use sdl2::{EventPump, render::{WindowCanvas, Texture}, ttf::Font};
 
-use crate::{input, components::KeyTracker, graphics};
+use crate::{input, components::KeyTracker, graphics, ui::process_ui_events};
 
 use super::{Game, StartScreen};
 
@@ -14,10 +14,10 @@ pub enum Engine {
 	Quit,
 }
 
+#[derive(Clone)]
 pub enum EngineEvent {
 	Quit,
 	Play,
-	CustomEvent(String),
 	None
 }
 
@@ -50,15 +50,11 @@ pub fn run_engine(
 			&mut processor.ui_elements,
 			x_scale,
 			y_scale
-		) {
+		).unwrap() {
 			EngineEvent::Quit => return Ok(EngineEvent::Quit),
 			EngineEvent::Play => return Ok(EngineEvent::Play),
-			EngineEvent::CustomEvent(event) => {
-				return Ok(EngineEvent::CustomEvent(event))
-			}
 			EngineEvent::None => (),
 		}
-
 
 		*processor.world.write_resource() = presses;
 	

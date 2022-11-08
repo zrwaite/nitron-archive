@@ -2,6 +2,7 @@ use sdl2::pixels::Color;
 use sdl2::rect::{Rect, Point};
 use specs::{World, DispatcherBuilder};
 use specs::{WorldExt,Builder};
+use crate::ui::UIEventFunction;
 use crate::ui::components::create_text_button;
 use specs::SystemData;
 
@@ -52,7 +53,7 @@ impl ProcessorTrait for StartScreen {
 				create_text_button(
 					Rect::from_center(Point::new(width as i32/2, height as i32/2), 80, 40),
 					Color::RGB(0, 200, 150),
-					EngineEvent::Play,
+					UIEventFunction::Engine(EngineEvent::Play),
 					"Start".to_string(),
 				),
 			],

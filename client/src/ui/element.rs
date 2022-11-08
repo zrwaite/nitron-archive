@@ -1,6 +1,8 @@
 use sdl2::{pixels::Color, rect::Rect};
 
-use crate::{assets::FONTS, processor::EngineEvent, graphics::{scale, scale_u}};
+use crate::{assets::FONTS, graphics::{scale, scale_u}};
+
+use super::{UIEventFunction, new_id};
 
 pub struct UIStyles {
 	pub width: u32,
@@ -14,7 +16,9 @@ pub struct UIStyles {
 pub struct MouseDetails {
 	pub hovering: bool,
 	pub clicked: bool,
-	pub on_click: EngineEvent,
+	pub on_click: UIEventFunction,
+	pub on_hover: UIEventFunction,
+	pub off_hover: UIEventFunction,
 }
 
 pub struct TextElement {
@@ -49,6 +53,7 @@ pub struct ImageElement {
 }
 
 pub struct BoxElement {
+	pub id: String,
 	pub elements: Vec<UIElement>,
 	pub styles: UIStyles,
 	pub mouse_details: MouseDetails,
@@ -57,8 +62,9 @@ pub struct BoxElement {
 
 
 impl BoxElement {
-	pub fn simple_new(elements: Vec<UIElement>, rect: Rect, color: Color, on_click: EngineEvent) -> BoxElement {
+	pub fn simple_new(elements: Vec<UIElement>, rect: Rect, color: Color, on_click: UIEventFunction) -> BoxElement {
 		BoxElement {
+			id: new_id(),
 			elements,
 			styles: UIStyles {
 				width: rect.width(),
@@ -73,6 +79,8 @@ impl BoxElement {
 				hovering: false,
 				clicked: false,
 				on_click,
+    			on_hover: UIEventFunction::None,
+    			off_hover: UIEventFunction::None,
 			},
 		}
 	}
@@ -81,9 +89,10 @@ impl BoxElement {
 		rect: Rect, 
 		color: Color, 
 		border_color: Color,
-		on_click: EngineEvent,
+		on_click: UIEventFunction,
 	) -> BoxElement {
 		BoxElement {
+			id: new_id(),
 			elements,
 			styles: UIStyles {
 				width: rect.width(),
@@ -98,6 +107,8 @@ impl BoxElement {
 				hovering: false,
 				clicked: false,
 				on_click,
+				on_hover: UIEventFunction::None,
+    			off_hover: UIEventFunction::None,
 			},
 		}
 	}

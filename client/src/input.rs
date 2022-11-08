@@ -5,7 +5,7 @@ use sdl2::keyboard::Keycode;
 use crate::components::KeyTracker;
 use crate::graphics::scale;
 use crate::processor::EngineEvent;
-use crate::ui::UIElement;
+use crate::ui::{UIElement, UIEventFunction, BoxElement, process_ui_events};
 
 pub fn handle_events (
 	event_pump: &mut EventPump, 
@@ -13,12 +13,13 @@ pub fn handle_events (
 	ui_elements: &mut Vec<UIElement>,
 	x_scale: f64,
 	y_scale: f64
-) -> EngineEvent {
+) -> Result<EngineEvent, String> {
+	let mut events: Vec<UIEventFunction> = Vec::new();
 	for event in event_pump.poll_iter() {
 		match event {
 			Event::Quit {..} |
 			Event::KeyDown { keycode: Some(Keycode::Escape), .. } => {
-				return EngineEvent::Quit;
+				return Ok(EngineEvent::Quit);
 			},
 			Event::KeyDown { keycode: Some(Keycode::Left), repeat: false, .. } => {
 				presses.left = true;
@@ -44,21 +45,27 @@ pub fn handle_events (
 			Event::KeyUp { keycode: Some(Keycode::Down), repeat: false, .. } => {
 				presses.down = false;
 			},
-			Event::MouseMotion { timestamp, window_id, which, mousestate, x, y, xrel, yrel } => {
+			Event::MouseMotion { 
+				// timestamp, window_id, which, mousestate, xrel, yrel 
+				x, y, .. } => {
 				for ui_element in ui_elements.iter_mut() {
 					match ui_element {
 						UIElement::Box(box_element) => {
 							if box_element.contains_point(scale(x, 1.0/x_scale),scale(y, 1.0/y_scale)) {
 								box_element.mouse_details.hovering= true;
+								println!("hovering");
 							} else {
 								box_element.mouse_details.hovering= false;
+								println!("not hovering");
 							}
 						},
 						_ => {}
 					}
 				}
 			},
-			Event::MouseButtonDown { timestamp, window_id, which, mouse_btn, clicks, x, y } => {
+			Event::MouseButtonDown { 
+				// timestamp, window_id, which, mouse_btn, clicks, 
+				x, y, .. } => {
 				for ui_element in ui_elements.iter_mut() {
 					match ui_element {
 						UIElement::Box(box_element) => {
@@ -78,15 +85,18 @@ pub fn handle_events (
 						UIElement::Box(box_element) => {
 							if box_element.contains_point(scale(x, 1.0/x_scale),scale(y, 1.0/y_scale)) && box_element.mouse_details.clicked {
 								box_element.mouse_details.clicked = false;
-								return EngineEvent::Play;
+								events.push(box_element.mouse_details.on_click.clone());
+								// box_element.mouse_details.on_click.clone;
 							}
 						},
 						_ => {}
 					}
+
 				}
 			},
 			_ => {}
 		}
 	}
-	EngineEvent::None
+	// Ok(EngineEvent::None)
+	process_ui_events(&events)
 }

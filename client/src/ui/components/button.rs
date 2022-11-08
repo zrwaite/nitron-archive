@@ -2,16 +2,17 @@ use sdl2::{rect::Rect};
 
 use sdl2::pixels::Color;
 
-use crate::processor::EngineEvent;
-use crate::ui::{BoxElement, UIStyles, UIElement, TextElement, MouseDetails};
+use crate::ui::{BoxElement, UIStyles, UIElement, TextElement, MouseDetails, UIEventFunction, new_id};
 
 pub fn create_text_button(
 	rect: Rect,
 	color: Color,
-	on_click: EngineEvent,
+	on_click: UIEventFunction,
 	text: String,
 ) -> UIElement {
+	let new_color = color.clone();
 	UIElement::Box(BoxElement {
+		id: new_id(),
 		elements: vec![
 			TextElement::simple_new(
 				text,
@@ -34,6 +35,8 @@ pub fn create_text_button(
 			hovering: false,
 			clicked: false,
 			on_click,
+			on_hover: UIEventFunction::None,
+			off_hover: UIEventFunction::None,
 		},
 	})
 }

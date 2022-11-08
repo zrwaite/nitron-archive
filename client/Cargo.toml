@@ -12,3 +12,7 @@ specs-derive = "*"
 version = "*"
 default-features = false
 features = ["image", "ttf"]
+
+[dependencies.uuid]
+version = "1.2.1"
+features = ["v4","fast-rng","macro-diagnostics",]

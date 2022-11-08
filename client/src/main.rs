@@ -17,7 +17,7 @@ use components::{Vector2, KeyTracker, Vector3};
 use processor::{run_engine, Game, StartScreen, Engine, EngineEvent};
 use entities::player::Player;
 
-use sdl2::{image::{self, InitFlag}, mouse::Cursor};
+use sdl2::{image::{self, InitFlag}};
 
 use assets::{TEXTURES, load_textures, load_fonts};
 
@@ -80,9 +80,6 @@ fn main() -> Result<(), String> {
                         let game = Game::new(800, 600, player, presses);
                         engine = Engine::Running(game);
                     }
-                    EngineEvent::CustomEvent(_) => {
-                        panic!("ended start screen with custom event")
-                    },
                     EngineEvent::None => {
                         panic!("ended start screen without follow up event")
                     }
