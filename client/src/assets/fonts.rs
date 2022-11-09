@@ -1,5 +1,4 @@
 use std::collections::HashMap;
-
 use sdl2::ttf::{Sdl2TtfContext, Font};
 
 pub struct StringFonts {

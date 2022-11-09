@@ -1,10 +1,19 @@
-use std::{collections::HashMap, time::Duration};
-
-use sdl2::{EventPump, render::{WindowCanvas, Texture}, ttf::Font};
+use std::collections::HashMap;
+use std::time::Duration;
+use sdl2::EventPump;
+use sdl2::render::{WindowCanvas, Texture};
+use sdl2::ttf::Font;
 use specs_derive::Component;
 use specs::Component;
 use specs::DenseVecStorage;
-use crate::{input, components::{KeyTracker}, graphics, events::EngineEvent, models::HashVec, controller::{run_controller}, physics::{run_physics}, animation::{run_animator}};
+
+use crate::animation::run_animator;
+use crate::components::KeyTracker;
+use crate::graphics::render;
+use crate::input::handle_events;
+use crate::models::HashVec;
+use crate::controller::run_controller;
+use crate::physics::run_physics;
 
 use super::{Game, StartScreen};
 
@@ -13,7 +22,14 @@ use super::{Game, StartScreen};
 pub enum EngineState {
 	Start(StartScreen),
 	Playing(Game),
-	Quit
+	_Quit
+}
+
+#[derive(Clone)]
+pub enum EngineEvent {
+	Quit,
+	Play,
+	None
 }
 
 pub struct Engine {
@@ -58,7 +74,7 @@ impl Engine {
 			let y_scale = screen_height as f64 / self.height as f64;
 
 			// Handle input events
-			match input::handle_events(
+			match handle_events(
 				&mut event_pump, 
 				&mut presses, 
 				&mut self.game_entities,
@@ -76,7 +92,7 @@ impl Engine {
 			run_controller(&mut presses, &mut self.game_entities, &mut self.state);
 		
 			// Render
-			graphics::renderer::render(
+			render(
 				canvas, 
 				&textures, 
 				&fonts, 

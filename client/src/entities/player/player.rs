@@ -5,6 +5,7 @@ use sdl2::render::{WindowCanvas, Texture};
 use sdl2::ttf::Font;
 use specs_derive::Component;
 use specs::Component;
+use specs::DenseVecStorage;
 
 use crate::components::{Vector2, Vector3, Vector4};
 use crate::graphics::{Renderable, scale, scale_u, Graphic};
@@ -12,8 +13,8 @@ use crate::models::GetId;
 use crate::physics::Hitbox;
 use crate::entities::sprites::MovingSpriteDisplay;
 use crate::utils::new_id;
+
 use super::PlayerAnimator;
-use specs::DenseVecStorage;
 
 #[derive(Component, Clone)]
 pub struct Player {

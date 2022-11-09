@@ -1,8 +1,13 @@
 use std::collections::HashMap;
+use sdl2::render::{WindowCanvas, Texture};
+use sdl2::ttf::Font;
 
-use sdl2::{render::{WindowCanvas, Texture}, ttf::Font};
-
-use crate::{graphics::{Renderable}, models::GetId, input::MouseActions, ui::UIBox, events::EngineEvent, entities::{Player, StaticObstacle}};
+use crate::graphics::Renderable;
+use crate::models::GetId;
+use crate::input::MouseActions;
+use crate::ui::UIBox;
+use crate::entities::{Player, StaticObstacle};
+use crate::engine::EngineEvent;
 
 #[derive(Clone)]
 pub enum GameEntity {

@@ -1,9 +1,9 @@
 use std::collections::HashMap;
-
 use sdl2::rect::Rect;
 use sdl2::render::{WindowCanvas, Texture};
 use sdl2::ttf::Font;
 use sdl2::pixels::Color;
+
 use crate::components::{Vector2, Vector3, Vector4};
 use crate::animation::AnimationFrame;
 use crate::graphics::{Renderable, scale_u, scale, Graphic};

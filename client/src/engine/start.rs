@@ -1,5 +1,6 @@
 use sdl2::pixels::Color;
 use sdl2::rect::{Rect, Point};
+
 use crate::game::GameEntity;
 use crate::models::GetId;
 use crate::ui::components::create_text_button;

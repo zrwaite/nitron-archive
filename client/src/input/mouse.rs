@@ -1,4 +1,4 @@
-use crate::events::EngineEvent;
+use crate::engine::EngineEvent;
 
 pub trait MouseActions {
 	fn contains_point(&self, x: i32, y: i32) -> bool;

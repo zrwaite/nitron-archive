@@ -1,8 +1,13 @@
 use std::collections::HashMap;
 
-use sdl2::{pixels::Color, rect::Rect, render::{WindowCanvas, Texture, TextureQuery}, ttf::Font};
+use sdl2::pixels::Color;
+use sdl2::rect::Rect;
+use sdl2::render::{WindowCanvas, Texture, TextureQuery};
+use sdl2::ttf::Font;
 
-use crate::{ui::UIStyles, assets::FONTS, graphics::{Renderable, scale, scale_u}};
+use crate::ui::UIStyles; 
+use crate::assets::FONTS;
+use crate::graphics::{Renderable, scale, scale_u};
 
 #[derive(Clone)]
 pub struct TextElement {

@@ -1,11 +1,16 @@
 use std::collections::HashMap;
-
-use sdl2::{rect::Rect, render::{WindowCanvas, Texture}, ttf::Font};
+use sdl2::rect::Rect;
+use sdl2::render::{WindowCanvas, Texture};
+use sdl2::ttf::Font;
 use specs_derive::Component;
 use specs::Component;
 use specs::DenseVecStorage;
 
-use crate::{graphics::{scale, scale_u, Renderable}, ui::{styles::UIStyles}, input::{MouseActions, MouseDetails}, events::EngineEvent, models::GetId};
+use crate::graphics::{scale, scale_u, Renderable};
+use crate::ui::{styles::UIStyles};
+use crate::input::{MouseActions, MouseDetails};
+use crate::models::GetId;
+use crate::engine::EngineEvent;
 
 use super::text_element::TextElement;
 

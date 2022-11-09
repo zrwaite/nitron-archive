@@ -4,7 +4,6 @@ use sdl2::rect::Rect;
 
 use crate::{animation::AnimationFrame, components::Direction};
 
-
 #[derive(Component, Debug, Clone)]
 #[storage(VecStorage)]
 pub struct PlayerAnimator {

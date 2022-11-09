@@ -1,5 +1,4 @@
 use std::collections::HashMap;
-
 use sdl2::{render::{TextureCreator, Texture}, video::WindowContext};
 use sdl2::image::LoadTexture;
 

@@ -1,11 +1,10 @@
 use crate::entities::Player;
 use crate::game::GameEntity;
 use crate::models::HashVec;
-use crate::processor::EngineState;
+use crate::engine::EngineState;
 
 use super::collision::player_static_obstacle_collision;
 pub fn run_physics(game_entities: &mut HashVec, engine_state: &mut EngineState) {  
-    // let (game_entities, engine_state) = (&mut data.0, &mut data.1).join().next().unwrap();
 
     match engine_state {
         EngineState::Playing(game) => {

@@ -9,14 +9,6 @@ pub struct Hitbox {
 }
 
 impl Hitbox {
-	// pub fn new(w: u32, h: u32, y_offset: i32, x_offset: i32) -> Self {
-	// 	Hitbox {
-	// 		w,
-	// 		h,
-	// 		y_offset,
-	// 		x_offset,
-	// 	}
-	// }
 	pub fn to_v4(&self, pos: Vector2) -> Vector4 {
 		Vector4::new(
 			pos.x + self.x_offset,

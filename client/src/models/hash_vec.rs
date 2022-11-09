@@ -1,4 +1,5 @@
-use std::{collections::HashMap, cmp::Ordering};
+use std::collections::HashMap;
+use std::cmp::Ordering;
 use specs::DenseVecStorage;
 use specs::Component;
 use specs_derive::Component;

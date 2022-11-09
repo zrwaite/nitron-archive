@@ -1,5 +1,6 @@
-use crate::{components::{Direction}, models::HashVec, processor::EngineState};
-
+use crate::components::Direction; 
+use crate::models::HashVec;
+use crate::engine::EngineState;
 
 pub fn run_animator(game_entities: &mut HashVec, engine_state: &mut EngineState) {  
     match engine_state {

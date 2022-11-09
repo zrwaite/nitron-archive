@@ -1,4 +1,3 @@
-
 use specs_derive::Component;
 use specs::Component;
 use specs::DenseVecStorage;
@@ -7,8 +6,6 @@ use crate::assets::TEXTURES;
 use crate::entities::Player;
 use crate::game::GameEntity;
 use crate::models::GetId;
-
-
 use crate::entities::sprites::{rock::generate_rock};
 use crate::components::{Vector2, Vector3};
 

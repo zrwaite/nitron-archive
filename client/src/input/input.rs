@@ -3,7 +3,7 @@ use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 
 use crate::components::KeyTracker;
-use crate::events::EngineEvent;
+use crate::engine::EngineEvent;
 use crate::graphics::scale;
 use crate::models::HashVec;
 
@@ -16,7 +16,6 @@ pub fn handle_events (
 	x_scale: f64,
 	y_scale: f64
 ) -> Result<EngineEvent, String> {
-	// let mut events: Vec<UIEventFunction> = Vec::new();
 	for event in event_pump.poll_iter() {
 		match event {
 			Event::Quit {..} |
@@ -50,7 +49,6 @@ pub fn handle_events (
 			Event::MouseMotion { 
 				// timestamp, window_id, which, mousestate, xrel, yrel 
 				x, y, .. } => {
-					// return Ok(EngineEvent::Play)
 				for game_entity in game_entities.iter_mut() {
 					let engine_event = game_entity.mouse_move(scale(x, 1.0/x_scale),scale(y, 1.0/y_scale));
 					if engine_event.is_some() {
@@ -82,5 +80,4 @@ pub fn handle_events (
 		}
 	}
 	Ok(EngineEvent::None)
-	// process_ui_events(&events)
 }

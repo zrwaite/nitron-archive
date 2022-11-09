@@ -7,23 +7,18 @@ mod input;
 mod assets;
 mod entities;
 mod utils;
-mod processor;
+mod engine;
 mod ui;
-mod events;
 mod models;
 mod game;
 
 use std::env;
+use sdl2::image::{self, InitFlag};
 
 use components::{KeyTracker};
-use events::EngineEvent;
 use models::HashVec;
-use processor::{Game, Engine, EngineState};
-
-use sdl2::{image::{self, InitFlag}};
-
+use engine::{Game, Engine, EngineState, EngineEvent};
 use assets::{load_textures, load_fonts};
-
 
 fn main() -> Result<(), String> {
     let args: Vec<String> = env::args().collect();
@@ -76,7 +71,7 @@ fn main() -> Result<(), String> {
         match event_event {
             EngineEvent::Quit => break 'engine_loop,
             EngineEvent::Play => {
-                let (game, game_entities) = Game::new(800, 600);
+                let (game, game_entities) = Game::new(400, 300);
                 engine.game_entities.clear();
                 engine.game_entities = HashVec::new(game_entities);
                 engine.state = EngineState::Playing(game);
