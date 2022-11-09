@@ -1,13 +1,21 @@
-use sdl2::rect::Rect;
+use std::collections::HashMap;
 
+use sdl2::rect::Rect;
+use sdl2::render::{WindowCanvas, Texture};
+use sdl2::ttf::Font;
+use sdl2::pixels::Color;
 use crate::components::{Vector2, Vector3, Vector4};
 use crate::animation::AnimationFrame;
+use crate::graphics::{Renderable, scale_u, scale, Graphic};
+use crate::models::GetId;
 use crate::physics::Hitbox;
+use crate::utils::new_id;
 
 use super::SpriteDisplay;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct StaticObstacle {
+	id: String,
 	pub display: SpriteDisplay,
 	pub pos: Vector2,
 	hitbox: Hitbox,
@@ -22,6 +30,7 @@ impl StaticObstacle {
 		frame_region: Rect
 	) -> Self {     
 		StaticObstacle {
+			id: new_id(),
 			display: SpriteDisplay::new(texture_key, size.to_vector2()),
 			pos,
 			hitbox: Hitbox {
@@ -35,5 +44,52 @@ impl StaticObstacle {
 	}
 	pub fn hitbox(&self) -> Vector4 {
 		self.hitbox.to_v4(self.pos)
+	}
+	pub fn contains_point(&self, x:i32, y:i32) -> bool {
+		let rect = Rect::new(
+			self.pos.x as i32,
+			self.pos.y as i32,
+			self.display.size.x as u32,
+			self.display.size.y as u32,
+		);
+		rect.contains_point((x, y))
+	}
+}
+
+impl GetId for StaticObstacle {
+	fn get_id(&self) -> String {
+		self.id.clone()
+	}
+}
+
+impl Renderable for StaticObstacle {
+	fn render(&self, 
+		canvas: &mut WindowCanvas,
+		textures: &HashMap<String, Texture>,
+    	_fonts: &HashMap<String, Font>,
+		x_scale: f64,
+		y_scale: f64,
+		debug: bool
+	) {
+		let texture_key = &self.display.texture_key;
+        let current_frame = self.frame.region;
+		let hitbox = self.hitbox();
+        let screen_rect = Rect::from_center(
+            (scale(self.pos.x, x_scale),scale(self.pos.y, y_scale),),
+			scale_u(self.display.size.x, x_scale),
+			scale_u(self.display.size.y, y_scale),
+        );
+		let graphic = Graphic {
+			texture_key: texture_key.to_string(),
+			src: current_frame,
+			dst: screen_rect,
+			hitbox_dst: hitbox.get_scaled(x_scale, y_scale).to_rect(),
+			z_index: hitbox.y,
+		};
+		canvas.copy(&textures[&graphic.texture_key], graphic.src, graphic.dst).unwrap();
+		if debug {
+			canvas.set_draw_color(Color::RGB(255, 0, 0));
+			canvas.draw_rect(graphic.hitbox_dst).unwrap();
+		}
 	}
 }

@@ -1,70 +1,65 @@
-use specs::{World, DispatcherBuilder};
-use specs::{WorldExt,Builder};
-use crate::entities::Entity;
-use crate::{entities::player::Player, game_map::GameMap};
-use specs::SystemData;
 
-use crate::components::{KeyboardControlled, KeyTracker};
-use crate::{controller, physics, animation, graphics};
+use specs_derive::Component;
+use specs::Component;
+use specs::DenseVecStorage;
 
-use super::{Processor, ProcessorTrait, ProcessorData};
+use crate::assets::TEXTURES;
+use crate::entities::Player;
+use crate::game::GameEntity;
+use crate::models::GetId;
 
-pub struct GameData {
-	pub player: Player,
-	pub entities: Vec<Entity>,
+
+use crate::entities::sprites::{rock::generate_rock};
+use crate::components::{Vector2, Vector3};
+
+
+#[derive(Component)]
+pub struct Game {
+	pub player_id: String,
 	pub map: GameMap,
 }
 
-pub struct Game {
-	pub processor: Processor,
-	// pub data: GameData,
-}
-
 impl Game {
-	pub fn new(
-		game_width: u32, 
-		game_height: u32,
-		player: Player,
-		presses: KeyTracker,
-	) -> Self {
-		let data = GameData {
-			map: GameMap::new(game_width, game_height),
-			entities: vec![],
-			player,
-		};
-		let processor = Game::new_processor(presses, ProcessorData::Game(data), game_width, game_height);
-		Self {
-			processor,
-		}
+	pub fn new(width: u32, height: u32)-> (Self, Vec<GameEntity>) {
+		let player = Player::new(Vector2::new(100, 100), Vector3::new(26, 36, 10), String::from(TEXTURES.player));
+
+		let (map, map_entities) = GameMap::new(width, height);
+
+		let mut entities = vec![
+			GameEntity::Player(player),
+		];
+		entities.append(&mut map_entities.to_vec());
+
+		(
+			Self {
+				player_id: entities[0].get_id(),
+				map,
+			},
+			entities
+		)
 	}
-	
 }
 
+pub struct GameMap {
+	pub width: u32,
+	pub height: u32,
+	pub static_obstacle_ids: Vec<String>,
+}
 
-impl ProcessorTrait for Game {
-	fn new_processor(presses: KeyTracker, data: ProcessorData, width: u32, height: u32) -> Processor {
-		let mut dispatcher =  DispatcherBuilder::new()
-			.with(controller::Controller, "Controller", &[])
-			.with(physics::Physics{}, "Physics", &["Controller"])
-			.with(animation::Animator, "Animator", &["Controller"])
-			.build();
-		let mut world = World::new();
-		dispatcher.setup(&mut world);
-		graphics::renderer::SystemData::setup(&mut world);
-		world.insert(presses);
-		world.create_entity()
-			.with(KeyboardControlled)
-			.with(data)
-			.build();
-		
-		Processor {
-			dispatcher,
-			world,
-			ui_elements: vec![
-				// UIElement::Text(TextElement::new_normal("Hello World".to_string(), 30, Color::RGB(255, 255, 255), width as i32/2, height as i32/2))
-			],
-			width,
-			height,
-		}
+impl GameMap {
+	pub fn new(width: u32, height: u32) -> (Self, Vec<GameEntity>) {
+		let static_obstacles = Vec::from(
+			[generate_rock(Vector2::new(200, 200), Vector3::new(40, 20, 15))]
+		);
+		let static_obstacle_ids = static_obstacles.iter().map(|entity| entity.get_id()).collect();
+		let entities = static_obstacles.into_iter().map(|entity| GameEntity::StaticObstacle(entity)).collect();
+		(
+			Self {
+				width,
+				height,
+				static_obstacle_ids,
+			},
+			entities
+		)
 	}
 }

@@ -1,6 +1,6 @@
 use crate::components::{Vector2, Vector4};
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Hitbox {
 	pub w: u32,
 	pub h: u32,

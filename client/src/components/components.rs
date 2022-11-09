@@ -3,7 +3,7 @@ use specs::prelude::{Component, VecStorage, NullStorage};
 use std::ops;
 use sdl2::rect::{Rect, Point};
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Direction {
     Up,
     Down,

@@ -1,48 +1,32 @@
 
-
-use specs::prelude::{ReadExpect, ReadStorage, WriteStorage, Join, System};
-
-use crate::processor::{ProcessorData};
-use crate::components::{KeyTracker, KeyboardControlled, Direction};
+use crate::{components::{KeyTracker, Direction}, models::HashVec, processor::EngineState};
 
 const PLAYER_MOVEMENT_SPEED: i32 = 2;
 
-pub struct Controller;
+pub fn run_controller(presses: &mut KeyTracker, game_entities: &mut HashVec, engine_state: &mut EngineState) {  
+    match engine_state {
+        EngineState::Playing(game) => {
+            let player = game_entities.get(game.player_id.clone()).unwrap().mut_unwrap_player();
 
-impl<'a> System<'a> for Controller {
-    type SystemData = (
-        ReadExpect<'a, KeyTracker>,
-        ReadStorage<'a, KeyboardControlled>,
-        WriteStorage<'a, ProcessorData>
-    );
-
-    fn run(&mut self, mut data: Self::SystemData) {
-        let presses = &*data.0;
-        for ( _, processor_data) in (&data.1, &mut data.2).join() {
-            match processor_data {
-                ProcessorData::Game(game) => {
-                    let player = &mut game.player;
-                    if presses.down {
-                        player.vel.y = PLAYER_MOVEMENT_SPEED;
-                        player.display.direction = Direction::Down;
-                    } else if presses.up {
-                        player.vel.y = - PLAYER_MOVEMENT_SPEED;
-                        player.display.direction = Direction::Up;
-                    } else {
-                        player.vel.y = 0;
-                    }
-                    if presses.left {
-                        player.vel.x = - PLAYER_MOVEMENT_SPEED;
-                        player.display.direction = Direction::Left;
-                    } else if presses.right {
-                        player.vel.x = PLAYER_MOVEMENT_SPEED;
-                        player.display.direction = Direction::Right;
-                    } else {
-                        player.vel.x = 0;
-                    }
-                }
-                ProcessorData::None => {}
+            if presses.down {
+                player.vel.y = PLAYER_MOVEMENT_SPEED;
+                player.display.direction = Direction::Down;
+            } else if presses.up {
+                player.vel.y = - PLAYER_MOVEMENT_SPEED;
+                player.display.direction = Direction::Up;
+            } else {
+                player.vel.y = 0;
             }
-        }   
+            if presses.left {
+                player.vel.x = - PLAYER_MOVEMENT_SPEED;
+                player.display.direction = Direction::Left;
+            } else if presses.right {
+                player.vel.x = PLAYER_MOVEMENT_SPEED;
+                player.display.direction = Direction::Right;
+            } else {
+                player.vel.x = 0;
+            }   
+        }
+        _ => {}
     }
 }

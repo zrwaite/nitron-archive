@@ -1,6 +1,6 @@
 use crate::components::{Vector2, Direction};
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct SpriteDisplay {
 	pub texture_key:String,
 	pub size: Vector2,
@@ -12,6 +12,7 @@ impl SpriteDisplay {
 	}
 }
 
+#[derive(Clone)]
 pub struct MovingSpriteDisplay {
 	pub texture_key: String,
 	pub size: Vector2,

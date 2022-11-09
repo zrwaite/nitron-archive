@@ -3,18 +3,20 @@ use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 
 use crate::components::KeyTracker;
+use crate::events::EngineEvent;
 use crate::graphics::scale;
-use crate::processor::EngineEvent;
-use crate::ui::{UIElement, UIEventFunction, BoxElement, process_ui_events};
+use crate::models::HashVec;
+
+use super::MouseActions;
 
 pub fn handle_events (
 	event_pump: &mut EventPump, 
 	presses: &mut KeyTracker,
-	ui_elements: &mut Vec<UIElement>,
+	game_entities: &mut HashVec,
 	x_scale: f64,
 	y_scale: f64
 ) -> Result<EngineEvent, String> {
-	let mut events: Vec<UIEventFunction> = Vec::new();
+	// let mut events: Vec<UIEventFunction> = Vec::new();
 	for event in event_pump.poll_iter() {
 		match event {
 			Event::Quit {..} |
@@ -48,55 +50,37 @@ pub fn handle_events (
 			Event::MouseMotion { 
 				// timestamp, window_id, which, mousestate, xrel, yrel 
 				x, y, .. } => {
-				for ui_element in ui_elements.iter_mut() {
-					match ui_element {
-						UIElement::Box(box_element) => {
-							if box_element.contains_point(scale(x, 1.0/x_scale),scale(y, 1.0/y_scale)) {
-								box_element.mouse_details.hovering= true;
-								println!("hovering");
-							} else {
-								box_element.mouse_details.hovering= false;
-								println!("not hovering");
-							}
-						},
-						_ => {}
+					// return Ok(EngineEvent::Play)
+				for game_entity in game_entities.iter_mut() {
+					let engine_event = game_entity.mouse_move(scale(x, 1.0/x_scale),scale(y, 1.0/y_scale));
+					if engine_event.is_some() {
+						return Ok(engine_event.unwrap())
 					}
 				}
 			},
 			Event::MouseButtonDown { 
 				// timestamp, window_id, which, mouse_btn, clicks, 
 				x, y, .. } => {
-				for ui_element in ui_elements.iter_mut() {
-					match ui_element {
-						UIElement::Box(box_element) => {
-							if box_element.contains_point(scale(x, 1.0/x_scale),scale(y, 1.0/y_scale)) {
-								box_element.mouse_details.clicked = true;
-							}
-						},
-						_ => {}
+				for game_entity in game_entities.iter_mut() {
+					let engine_event = game_entity.mouse_down(scale(x, 1.0/x_scale),scale(y, 1.0/y_scale));
+					if engine_event.is_some() {
+						return Ok(engine_event.unwrap())
 					}
 				}
 			},
 			Event::MouseButtonUp {
 				// timestamp, window_id, which, mouse_btn, clicks, 
 				x, y, .. } => {
-				for ui_element in ui_elements.iter_mut() {
-					match ui_element {
-						UIElement::Box(box_element) => {
-							if box_element.contains_point(scale(x, 1.0/x_scale),scale(y, 1.0/y_scale)) && box_element.mouse_details.clicked {
-								box_element.mouse_details.clicked = false;
-								events.push(box_element.mouse_details.on_click.clone());
-								// box_element.mouse_details.on_click.clone;
-							}
-						},
-						_ => {}
+				for game_entity in game_entities.iter_mut() {
+					let engine_event = game_entity.mouse_up(scale(x, 1.0/x_scale),scale(y, 1.0/y_scale));
+					if engine_event.is_some() {
+						return Ok(engine_event.unwrap())
 					}
-
 				}
 			},
 			_ => {}
 		}
 	}
-	// Ok(EngineEvent::None)
-	process_ui_events(&events)
+	Ok(EngineEvent::None)
+	// process_ui_events(&events)
 }

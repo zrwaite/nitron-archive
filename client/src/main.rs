@@ -6,20 +6,23 @@ mod components;
 mod input;
 mod assets;
 mod entities;
-mod game_map;
+mod utils;
 mod processor;
 mod ui;
 mod events;
+mod models;
+mod game;
 
 use std::env;
 
-use components::{Vector2, KeyTracker, Vector3};
-use processor::{run_engine, Game, StartScreen, Engine, EngineEvent};
-use entities::player::Player;
+use components::{KeyTracker};
+use events::EngineEvent;
+use models::HashVec;
+use processor::{Game, Engine, EngineState};
 
 use sdl2::{image::{self, InitFlag}};
 
-use assets::{TEXTURES, load_textures, load_fonts};
+use assets::{load_textures, load_fonts};
 
 
 fn main() -> Result<(), String> {
@@ -53,64 +56,35 @@ fn main() -> Result<(), String> {
     // Initialize resource
     let presses = KeyTracker::new();
 
-    let mut engine = Engine::Start(
-        StartScreen::new(
-            400, 300, presses
-        )   
+    let mut engine = Engine::new(
+        400,
+        300,
+        presses,
     );
 
     let mut event_pump = sdl_context.event_pump()?;
 
-    'engine: loop {
-        match engine {
-            Engine::Start(start_screen) => {
-                let event_event = run_engine(
-                    &mut Engine::Start(start_screen), 
-                    &mut event_pump, 
-                    presses, 
-                    &mut canvas, 
-                    &textures, 
-                    &fonts
-                )?;
+    'engine_loop: loop {
+        let event_event = engine.run(
+            &mut event_pump, 
+            presses, 
+            &mut canvas, 
+            &textures, 
+            &fonts
+        )?;
 
-                match event_event {
-                    EngineEvent::Quit => break 'engine,
-                    EngineEvent::Play => {
-                        let player = Player::new(Vector2::new(100, 100), Vector3::new(26, 36, 10), String::from(TEXTURES.player));
-                        let game = Game::new(800, 600, player, presses);
-                        engine = Engine::Running(game);
-                    }
-                    EngineEvent::None => {
-                        panic!("ended start screen without follow up event")
-                    }
-                }
-                
-            },
-            Engine::Running(game) => {
-                run_engine(
-                    &mut Engine::Running(game), 
-                    &mut event_pump, 
-                    presses,
-                    &mut canvas, 
-                    &textures, 
-                    &fonts, 
-                )?;
-                engine = Engine::Quit;
-            },
-            Engine::Paused => {
-                // run_engine(
-                //     &mut game.processor, 
-                //     &mut event_pump, 
-                //     game.presses, 
-                //     &mut canvas, 
-                //     &textures, 
-                //     &fonts
-                // )?;
-            },
-            Engine::Quit => {
-                break 'engine;
+        match event_event {
+            EngineEvent::Quit => break 'engine_loop,
+            EngineEvent::Play => {
+                let (game, game_entities) = Game::new(800, 600);
+                engine.game_entities.clear();
+                engine.game_entities = HashVec::new(game_entities);
+                engine.state = EngineState::Playing(game);
             }
-        } 
+            EngineEvent::None => {
+                panic!("ended start screen without follow up event")
+            }
+        }
     }
     Ok(())
 }

@@ -5,7 +5,7 @@ use sdl2::rect::Rect;
 use crate::{animation::AnimationFrame, components::Direction};
 
 
-#[derive(Component, Debug)]
+#[derive(Component, Debug, Clone)]
 #[storage(VecStorage)]
 pub struct PlayerAnimator {
     // The current frame in the animation of the direction this entity is moving in
