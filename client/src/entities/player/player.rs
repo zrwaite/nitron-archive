@@ -9,7 +9,7 @@ use specs::DenseVecStorage;
 
 use crate::components::{Vector2, Vector3, Vector4};
 use crate::graphics::{Renderable, scale, scale_u, Graphic};
-use crate::models::GetId;
+use crate::models::HasId;
 use crate::physics::Hitbox;
 use crate::entities::sprites::MovingSpriteDisplay;
 use crate::utils::new_id;
@@ -103,8 +103,8 @@ impl Renderable for Player {
 	}
 }
 
-impl GetId for Player {
-	fn get_id(&self) -> String {
+impl HasId for Player {
+	fn id(&self) -> String {
 		self.id.clone()
 	}
 }

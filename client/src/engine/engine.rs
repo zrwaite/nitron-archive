@@ -96,7 +96,7 @@ impl Engine {
 				canvas, 
 				&textures, 
 				&fonts, 
-				&self.game_entities, 
+				&mut self.game_entities, 
 				self.width,
 				self.height,
 				true

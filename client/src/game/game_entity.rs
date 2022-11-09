@@ -2,8 +2,8 @@ use std::collections::HashMap;
 use sdl2::render::{WindowCanvas, Texture};
 use sdl2::ttf::Font;
 
-use crate::graphics::Renderable;
-use crate::models::GetId;
+use crate::graphics::{Renderable, HasZIndex};
+use crate::models::HasId;
 use crate::input::MouseActions;
 use crate::ui::UIBox;
 use crate::entities::{Player, StaticObstacle};
@@ -42,12 +42,12 @@ impl Renderable for GameEntity {
 	}
 }
 
-impl GetId for GameEntity {
-	fn get_id(&self) -> String {
+impl HasId for GameEntity {
+	fn id(&self) -> String {
 		match self {
-			GameEntity::Box(box_) => box_.get_id(),
-			GameEntity::Player(player) => player.get_id(),
-			GameEntity::StaticObstacle(obstacle) => obstacle.get_id()
+			GameEntity::Box(box_) => box_.id(),
+			GameEntity::Player(player) => player.id(),
+			GameEntity::StaticObstacle(obstacle) => obstacle.id()
 		}
 	}
 }
@@ -81,6 +81,16 @@ impl MouseActions for GameEntity {
 			GameEntity::Box(box_) => box_.mouse_move(x, y),
 			GameEntity::Player(_player) => None,
 			GameEntity::StaticObstacle(_obstacle) => None
+		}
+	}
+}
+
+impl HasZIndex for GameEntity {
+	fn z_index(&self) -> i32 {
+		match self {
+			GameEntity::Box(box_) => box_.z_index,
+			GameEntity::Player(player) => player.hitbox().y,
+			GameEntity::StaticObstacle(obstacle) => obstacle.hitbox().y
 		}
 	}
 }

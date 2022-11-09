@@ -2,7 +2,7 @@ use sdl2::pixels::Color;
 use sdl2::rect::{Rect, Point};
 
 use crate::game::GameEntity;
-use crate::models::GetId;
+use crate::models::HasId;
 use crate::ui::components::create_text_button;
 
 pub struct StartScreen {
@@ -16,7 +16,7 @@ impl StartScreen {
 			Color::RGB(0, 200, 150),
 			"Start".to_string(),
 		);
-		let start_button_id = start_button.get_id();
+		let start_button_id = start_button.id();
 		let entities = vec![
 			GameEntity::Box(start_button),
 		];

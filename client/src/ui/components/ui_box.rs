@@ -9,7 +9,7 @@ use specs::DenseVecStorage;
 use crate::graphics::{scale, scale_u, Renderable};
 use crate::ui::{styles::UIStyles};
 use crate::input::{MouseActions, MouseDetails};
-use crate::models::GetId;
+use crate::models::HasId;
 use crate::engine::EngineEvent;
 
 use super::text_element::TextElement;
@@ -21,7 +21,8 @@ pub struct UIBox {
 	pub text_node: Option<TextElement>,
 	pub styles: UIStyles,
 	pub initial_styles: UIStyles,
-	pub mouse_details: MouseDetails
+	pub mouse_details: MouseDetails,
+	pub z_index: i32,
 }
 
 
@@ -38,7 +39,8 @@ impl UIBox {
 			text_node,
 			styles: styles.clone(),
 			initial_styles: styles,
-			mouse_details: MouseDetails::new()
+			mouse_details: MouseDetails::new(),
+			z_index: 10000,
 		}
 	}
 	pub fn get_scaled_rect(&self, x_scale: f64, y_scale: f64) -> Rect {
@@ -101,8 +103,8 @@ impl MouseActions for UIBox {
 	}
 }
 
-impl GetId for UIBox {
-	fn get_id(&self) -> String {
+impl HasId for UIBox {
+	fn id(&self) -> String {
 		self.id.clone()
 	}
 }

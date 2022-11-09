@@ -7,7 +7,7 @@ use sdl2::pixels::Color;
 use crate::components::{Vector2, Vector3, Vector4};
 use crate::animation::AnimationFrame;
 use crate::graphics::{Renderable, scale_u, scale, Graphic};
-use crate::models::GetId;
+use crate::models::HasId;
 use crate::physics::Hitbox;
 use crate::utils::new_id;
 
@@ -56,8 +56,8 @@ impl StaticObstacle {
 	}
 }
 
-impl GetId for StaticObstacle {
-	fn get_id(&self) -> String {
+impl HasId for StaticObstacle {
+	fn id(&self) -> String {
 		self.id.clone()
 	}
 }

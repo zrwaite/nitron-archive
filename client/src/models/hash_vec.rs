@@ -6,8 +6,8 @@ use specs_derive::Component;
 
 use crate::game::GameEntity;
 
-pub trait GetId {
-	fn get_id(&self) -> String;
+pub trait HasId {
+	fn id(&self) -> String;
 }
 
 #[derive(Component)]
@@ -17,7 +17,7 @@ pub struct HashVec {
 }
 impl HashVec {
 	pub fn new(mut vec: Vec<GameEntity>) -> Self {
-		vec.sort_by(|a,b| a.get_id().cmp(&b.get_id()));
+		vec.sort_by(|a,b| a.id().cmp(&b.id()));
 		Self {
 			vec,
 			cache: HashMap::new(),
@@ -32,7 +32,7 @@ impl HashVec {
 		let mut high = self.vec.len() - 1;
 		while low <= high {
 			let mid = (low + high) / 2;
-			let mid_val = self.vec[mid].get_id();
+			let mid_val = self.vec[mid].id();
 			match mid_val.cmp(&id) {
 				Ordering::Equal => {
 					self.cache.insert(id, mid);
@@ -49,7 +49,7 @@ impl HashVec {
 		let mut high = self.vec.len() - 1;
 		while low <= high {
 			let mid = (low + high) / 2;
-			let mid_val = self.vec[mid].get_id();
+			let mid_val = self.vec[mid].id();
 			match mid_val.cmp(&id) {
 				Ordering::Equal => return mid,
 				Ordering::Greater => high = mid - 1,
@@ -70,7 +70,7 @@ impl HashVec {
 	}
 	pub fn _insert(&mut self, item: GameEntity) {
 		self.clear_cache();
-		let id = item.get_id();
+		let id = item.id();
 		let index = self._get_insert_index(id);
 		self.vec.insert(index, item);
 	}

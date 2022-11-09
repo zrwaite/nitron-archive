@@ -29,3 +29,7 @@ pub struct Graphic {
 	pub hitbox_dst: Rect,
 	pub z_index: i32,
 }
+
+pub trait HasZIndex {
+	fn z_index(&self) -> i32;
+}

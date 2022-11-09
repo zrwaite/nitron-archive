@@ -5,7 +5,7 @@ use specs::DenseVecStorage;
 use crate::assets::TEXTURES;
 use crate::entities::Player;
 use crate::game::GameEntity;
-use crate::models::GetId;
+use crate::models::HasId;
 use crate::entities::sprites::{rock::generate_rock};
 use crate::components::{Vector2, Vector3};
 
@@ -29,7 +29,7 @@ impl Game {
 
 		(
 			Self {
-				player_id: entities[0].get_id(),
+				player_id: entities[0].id(),
 				map,
 			},
 			entities
@@ -48,7 +48,7 @@ impl GameMap {
 		let static_obstacles = Vec::from(
 			[generate_rock(Vector2::new(200, 200), Vector3::new(40, 20, 15))]
 		);
-		let static_obstacle_ids = static_obstacles.iter().map(|entity| entity.get_id()).collect();
+		let static_obstacle_ids = static_obstacles.iter().map(|entity| entity.id()).collect();
 		let entities = static_obstacles.into_iter().map(|entity| GameEntity::StaticObstacle(entity)).collect();
 		(
 			Self {
