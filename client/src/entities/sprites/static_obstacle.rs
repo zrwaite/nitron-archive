@@ -5,7 +5,6 @@ use sdl2::ttf::Font;
 use sdl2::pixels::Color;
 
 use crate::components::{Vector2, Vector3, Vector4};
-use crate::animation::AnimationFrame;
 use crate::graphics::{Renderable, scale_u, scale, Graphic};
 use crate::models::HasId;
 use crate::physics::Hitbox;
@@ -19,7 +18,7 @@ pub struct StaticObstacle {
 	pub display: SpriteDisplay,
 	pub pos: Vector2,
 	hitbox: Hitbox,
-	pub frame: AnimationFrame
+	pub frame: Rect
 }
 
 impl StaticObstacle {
@@ -39,7 +38,7 @@ impl StaticObstacle {
 				y_offset: size.y / 2 - size.z / 2,
 				x_offset: 0,
 			},
-			frame: AnimationFrame::new(frame_region)
+			frame: frame_region
 		}
 	}
 	pub fn hitbox(&self) -> Vector4 {
@@ -72,7 +71,7 @@ impl Renderable for StaticObstacle {
 		debug: bool
 	) {
 		let texture_key = &self.display.texture_key;
-        let current_frame = self.frame.region;
+        let current_frame = self.frame;
 		let hitbox = self.hitbox();
         let screen_rect = Rect::from_center(
             (scale(self.pos.x, x_scale),scale(self.pos.y, y_scale),),

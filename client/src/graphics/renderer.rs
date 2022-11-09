@@ -20,7 +20,7 @@ pub fn render(
     height: u32,
     debug: bool,
 ) -> Result<(), String> {
-    canvas.set_draw_color(Color::RGB(0, 0, 0));
+    canvas.set_draw_color(Color::RGB(100, 100, 100));
     canvas.clear();
     let (screen_width, screen_height) = canvas.output_size()?;
 

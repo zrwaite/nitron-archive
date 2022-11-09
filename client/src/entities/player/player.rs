@@ -77,7 +77,6 @@ impl Renderable for Player {
 		debug: bool
 	) {
 		let texture_key = self.display.texture_key.clone();
-		let current_frame = self.animator.current_frame.region;
 		let hitbox = self.hitbox();
 		let screen_rect = Rect::from_center(
 			(
@@ -90,7 +89,7 @@ impl Renderable for Player {
 
 		let graphic = Graphic {
 			texture_key: texture_key.to_string(),
-			src: current_frame,
+			src: self.animator.current_frame,
 			dst: screen_rect,
 			hitbox_dst: hitbox.get_scaled(x_scale, y_scale).to_rect(),
 			z_index: hitbox.y,

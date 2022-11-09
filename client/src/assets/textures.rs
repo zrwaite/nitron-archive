@@ -24,7 +24,7 @@ impl Textures {
 }
 
 pub static TEXTURES: Textures = Textures {
-	player: "bardo.png",
+	player: "Player.png",
 	obstacles: "darkdimension.png",
 	// game_map: GameMapTextures::new(),
 };

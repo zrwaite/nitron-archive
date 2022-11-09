@@ -18,7 +18,7 @@ pub struct Game {
 
 impl Game {
 	pub fn new(width: u32, height: u32)-> (Self, Vec<GameEntity>) {
-		let player = Player::new(Vector2::new(100, 100), Vector3::new(26, 36, 10), String::from(TEXTURES.player));
+		let player = Player::new(Vector2::new(100, 100), Vector3::new(32, 40, 10), String::from(TEXTURES.player));
 
 		let (map, map_entities) = GameMap::new(width, height);
 
