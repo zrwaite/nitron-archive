@@ -6,7 +6,7 @@ use sdl2::pixels::Color;
 
 use crate::components::{Vector2, Vector3, Vector4};
 use crate::graphics::{Renderable, scale_u, scale, Graphic};
-use crate::models::HasId;
+use crate::entities::HasId;
 use crate::physics::Hitbox;
 use crate::utils::new_id;
 

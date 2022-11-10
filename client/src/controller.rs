@@ -1,5 +1,5 @@
 use crate::components::{KeyTracker, Direction};
-use crate::models::HashVec;
+use crate::entities::HashVec;
 use crate::engine::EngineState;
 
 const PLAYER_MOVEMENT_SPEED: i32 = 2;

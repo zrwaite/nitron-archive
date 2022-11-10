@@ -11,11 +11,12 @@ use crate::animation::run_animator;
 use crate::components::KeyTracker;
 use crate::graphics::render;
 use crate::input::handle_events;
-use crate::models::HashVec;
+use crate::entities::HashVec;
 use crate::controller::run_controller;
 use crate::physics::run_physics;
+use crate::Game;
 
-use super::{Game, StartScreen};
+use super::{StartScreen};
 
 
 #[derive(Component)]

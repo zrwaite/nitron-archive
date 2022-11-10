@@ -1,6 +1,5 @@
 use crate::entities::Player;
-use crate::game::GameEntity;
-use crate::models::HashVec;
+use crate::entities::{GameEntity,HashVec};
 use crate::engine::EngineState;
 
 use super::collision::player_static_obstacle_collision;

@@ -9,7 +9,7 @@ use specs::DenseVecStorage;
 use crate::graphics::{scale, scale_u, Renderable};
 use crate::ui::{styles::UIStyles};
 use crate::input::{MouseActions, MouseDetails};
-use crate::models::HasId;
+use crate::entities::HasId;
 use crate::engine::EngineEvent;
 
 use super::text_element::TextElement;

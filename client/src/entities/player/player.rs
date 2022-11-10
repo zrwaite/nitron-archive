@@ -9,7 +9,7 @@ use specs::DenseVecStorage;
 
 use crate::components::{Vector2, Vector3, Vector4};
 use crate::graphics::{Renderable, scale, scale_u, Graphic};
-use crate::models::HasId;
+use crate::entities::HasId;
 use crate::physics::Hitbox;
 use crate::entities::sprites::MovingSpriteDisplay;
 use crate::utils::new_id;

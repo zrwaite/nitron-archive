@@ -5,7 +5,7 @@ use sdl2::keyboard::Keycode;
 use crate::components::KeyTracker;
 use crate::engine::EngineEvent;
 use crate::graphics::scale;
-use crate::models::HashVec;
+use crate::entities::HashVec;
 
 use super::MouseActions;
 

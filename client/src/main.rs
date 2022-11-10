@@ -9,15 +9,15 @@ mod entities;
 mod utils;
 mod engine;
 mod ui;
-mod models;
 mod game;
 
 use std::env;
 use sdl2::image::{self, InitFlag};
 
 use components::{KeyTracker};
-use models::HashVec;
-use engine::{Game, Engine, EngineState, EngineEvent};
+use entities::HashVec;
+use engine::{Engine, EngineState, EngineEvent};
+use game::{Game};
 use assets::{load_textures, load_fonts};
 
 fn main() -> Result<(), String> {

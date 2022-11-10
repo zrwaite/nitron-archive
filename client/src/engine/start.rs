@@ -1,8 +1,7 @@
 use sdl2::pixels::Color;
 use sdl2::rect::{Rect, Point};
 
-use crate::game::GameEntity;
-use crate::models::HasId;
+use crate::entities::{GameEntity,HasId};
 use crate::ui::components::create_text_button;
 
 pub struct StartScreen {

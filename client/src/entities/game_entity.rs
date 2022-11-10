@@ -3,11 +3,11 @@ use sdl2::render::{WindowCanvas, Texture};
 use sdl2::ttf::Font;
 
 use crate::graphics::{Renderable, HasZIndex};
-use crate::models::HasId;
 use crate::input::MouseActions;
 use crate::ui::UIBox;
 use crate::entities::{Player, StaticObstacle};
 use crate::engine::EngineEvent;
+use super::HasId;
 
 #[derive(Clone)]
 pub enum GameEntity {

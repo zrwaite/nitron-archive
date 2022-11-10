@@ -3,9 +3,9 @@ use specs::Component;
 use specs::DenseVecStorage;
 
 use crate::assets::TEXTURES;
+use crate::entities::GameEntity;
 use crate::entities::Player;
-use crate::game::GameEntity;
-use crate::models::HasId;
+use crate::entities::HasId;
 use crate::entities::sprites::{rock::generate_rock};
 use crate::components::{Vector2, Vector3};
 

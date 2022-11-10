@@ -1,2 +1,2 @@
-pub mod game_entity;
-pub use game_entity::*;
+pub mod game;
+pub use game::*;

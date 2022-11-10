@@ -3,7 +3,7 @@ use sdl2::ttf::Font;
 use sdl2::pixels::Color;
 use sdl2::render::{WindowCanvas, Texture};
 
-use crate::models::{HashVec, HasId};
+use crate::entities::{HashVec, HasId};
 use crate::graphics::graphic::{Renderable,HasZIndex};
 
 pub struct GraphicIndex {

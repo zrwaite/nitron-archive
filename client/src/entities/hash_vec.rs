@@ -4,7 +4,7 @@ use specs::DenseVecStorage;
 use specs::Component;
 use specs_derive::Component;
 
-use crate::game::GameEntity;
+use crate::entities::GameEntity;
 
 pub trait HasId {
 	fn id(&self) -> String;
