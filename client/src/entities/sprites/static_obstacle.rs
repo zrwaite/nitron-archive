@@ -4,7 +4,7 @@ use sdl2::render::{WindowCanvas, Texture};
 use sdl2::ttf::Font;
 use sdl2::pixels::Color;
 
-use crate::components::{Vector2, Vector3, Vector4};
+use crate::utils::{Vector2, Vector3, Vector4};
 use crate::graphics::{Renderable, scale_u, scale, Graphic};
 use crate::entities::HasId;
 use crate::physics::Hitbox;

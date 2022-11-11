@@ -8,7 +8,7 @@ use specs::Component;
 use specs::DenseVecStorage;
 
 use crate::animation::run_animator;
-use crate::components::KeyTracker;
+use crate::input::KeyTracker;
 use crate::graphics::render;
 use crate::input::handle_events;
 use crate::entities::HashVec;

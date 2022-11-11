@@ -1,5 +1,5 @@
 use specs_derive::Component;
-use specs::prelude::{Component, VecStorage, NullStorage};
+use specs::prelude::{Component, VecStorage};
 use std::ops;
 use sdl2::rect::{Rect, Point};
 
@@ -104,29 +104,5 @@ impl Vector4 {
         Rect::from_center(Point::new(
             self.x, self.y,
         ), self.w as u32, self.h as u32)
-    }
-}
-
-
-#[derive(Component, Debug, Default)]
-#[storage(NullStorage)]
-pub struct KeyboardControlled;
-
-#[derive(Component, Debug, Copy, Clone)]
-#[storage(VecStorage)]
-pub struct KeyTracker {
-    pub up: bool,
-    pub down: bool,
-    pub right: bool,
-    pub left: bool
-}
-impl KeyTracker {
-    pub fn new () -> KeyTracker {
-        KeyTracker {
-            up: false,
-            down: false,
-            right: false,
-            left: false
-        }
     }
 }

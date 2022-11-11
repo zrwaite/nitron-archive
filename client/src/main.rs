@@ -2,7 +2,6 @@ mod physics;
 mod animation;
 mod controller;
 mod graphics;
-mod components;
 mod input;
 mod assets;
 mod entities;
@@ -14,7 +13,7 @@ mod game;
 use std::env;
 use sdl2::image::{self, InitFlag};
 
-use components::{KeyTracker};
+use input::{KeyTracker};
 use entities::HashVec;
 use engine::{Engine, EngineState, EngineEvent};
 use game::{Game};

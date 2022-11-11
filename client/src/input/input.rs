@@ -2,12 +2,11 @@ use sdl2::{EventPump};
 use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 
-use crate::components::KeyTracker;
 use crate::engine::EngineEvent;
 use crate::graphics::scale;
 use crate::entities::HashVec;
 
-use super::MouseActions;
+use super::{KeyTracker,MouseActions};
 
 pub fn handle_events (
 	event_pump: &mut EventPump, 

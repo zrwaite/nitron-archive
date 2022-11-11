@@ -2,7 +2,7 @@ use specs_derive::Component;
 use specs::prelude::{Component, VecStorage};
 use sdl2::rect::Rect;
 
-use crate::{components::Direction};
+use crate::{utils::Direction};
 
 #[derive(Component, Debug, Clone)]
 #[storage(VecStorage)]

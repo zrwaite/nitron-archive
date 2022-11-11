@@ -1,4 +1,5 @@
-use crate::components::{KeyTracker, Direction};
+use crate::utils::{Direction};
+use crate::input::{KeyTracker};
 use crate::entities::HashVec;
 use crate::engine::EngineState;
 

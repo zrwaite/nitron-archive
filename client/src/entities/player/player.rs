@@ -7,7 +7,7 @@ use specs_derive::Component;
 use specs::Component;
 use specs::DenseVecStorage;
 
-use crate::components::{Vector2, Vector3, Vector4};
+use crate::utils::{Vector2, Vector3, Vector4};
 use crate::graphics::{Renderable, scale, scale_u, Graphic};
 use crate::entities::HasId;
 use crate::physics::Hitbox;

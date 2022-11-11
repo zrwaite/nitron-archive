@@ -1,6 +1,6 @@
 use sdl2::rect::Rect;
 
-use crate::components::{Vector2, Vector3};
+use crate::utils::{Vector2, Vector3};
 use crate::entities::sprites::{StaticObstacle};
 use crate::assets::TEXTURES;
 

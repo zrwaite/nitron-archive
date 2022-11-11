@@ -1,4 +1,4 @@
-use crate::components::{Vector2, Vector4};
+use crate::utils::{Vector2, Vector4};
 
 #[derive(Debug, Clone)]
 pub struct Hitbox {

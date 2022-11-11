@@ -1,4 +1,4 @@
-use crate::components::{Vector2, Direction};
+use crate::utils::{Vector2, Direction};
 
 #[derive(Debug, Clone)]
 pub struct SpriteDisplay {

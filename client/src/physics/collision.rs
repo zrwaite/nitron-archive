@@ -1,4 +1,4 @@
-use crate::components::{Vector4};
+use crate::utils::{Vector4};
 use crate::entities::player::Player;
 
 #[derive(Debug, PartialEq)]

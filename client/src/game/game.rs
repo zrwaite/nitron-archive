@@ -7,7 +7,7 @@ use crate::entities::GameEntity;
 use crate::entities::Player;
 use crate::entities::HasId;
 use crate::entities::sprites::{rock::generate_rock};
-use crate::components::{Vector2, Vector3};
+use crate::utils::{Vector2, Vector3};
 
 
 #[derive(Component)]
