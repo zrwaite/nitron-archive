@@ -4,3 +4,5 @@ pub mod rock;
 pub use rock::*;
 pub mod home;
 pub use home::*;
+pub mod npc;
+pub use npc::*;

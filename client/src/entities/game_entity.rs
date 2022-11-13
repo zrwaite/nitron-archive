@@ -7,13 +7,14 @@ use crate::input::MouseActions;
 use crate::ui::UIBox;
 use crate::entities::{Player, StaticObstacle};
 use crate::engine::EngineEvent;
-use super::HasId;
+use super::{HasId, Npc};
 
 #[derive(Clone)]
 pub enum GameEntity {
 	Box(UIBox),
 	Player(Player),
-	StaticObstacle(StaticObstacle)
+	StaticObstacle(StaticObstacle),
+	Npc(Npc),
 }
 
 impl GameEntity {
@@ -37,7 +38,8 @@ impl Renderable for GameEntity {
 		match self {
 			GameEntity::Box(box_) => box_.render(canvas, textures, fonts, x_scale, y_scale, debug),
 			GameEntity::Player(player) => player.render(canvas, textures, fonts, x_scale, y_scale, debug),
-			GameEntity::StaticObstacle(obstacle) => obstacle.render(canvas, textures, fonts, x_scale, y_scale, debug)
+			GameEntity::StaticObstacle(obstacle) => obstacle.render(canvas, textures, fonts, x_scale, y_scale, debug),
+			GameEntity::Npc(npc) => npc.render(canvas, textures, fonts, x_scale, y_scale, debug)
 		}
 	}
 }
@@ -47,7 +49,8 @@ impl HasId for GameEntity {
 		match self {
 			GameEntity::Box(box_) => box_.id(),
 			GameEntity::Player(player) => player.id(),
-			GameEntity::StaticObstacle(obstacle) => obstacle.id()
+			GameEntity::StaticObstacle(obstacle) => obstacle.id(),
+			GameEntity::Npc(npc) => npc.id()
 		}
 	}
 }
@@ -57,14 +60,16 @@ impl MouseActions for GameEntity {
 		match self {
 			GameEntity::Box(box_) => box_.contains_point(x, y),
 			GameEntity::Player(player) => player.contains_point(x, y),
-			GameEntity::StaticObstacle(obstacle) => obstacle.contains_point(x, y)
+			GameEntity::StaticObstacle(obstacle) => obstacle.contains_point(x, y),
+			GameEntity::Npc(npc) => npc.contains_point(x, y)
 		}
 	}
 	fn mouse_down(&mut self, x: i32, y: i32) -> Option<EngineEvent>{
 		match self {
 			GameEntity::Box(box_) => box_.mouse_down(x, y),
 			GameEntity::Player(_player) => None,
-			GameEntity::StaticObstacle(_obstacle) => None
+			GameEntity::StaticObstacle(_obstacle) => None,
+			GameEntity::Npc(_npc) => None
 		}
 	}
 
@@ -72,7 +77,8 @@ impl MouseActions for GameEntity {
 		match self {
 			GameEntity::Box(box_) => box_.mouse_up(x, y),
 			GameEntity::Player(_player) => None,
-			GameEntity::StaticObstacle(_obstacle) => None
+			GameEntity::StaticObstacle(_obstacle) => None,
+			GameEntity::Npc(_npc) => None
 		}
 	}
 
@@ -80,7 +86,8 @@ impl MouseActions for GameEntity {
 		match self {
 			GameEntity::Box(box_) => box_.mouse_move(x, y),
 			GameEntity::Player(_player) => None,
-			GameEntity::StaticObstacle(_obstacle) => None
+			GameEntity::StaticObstacle(_obstacle) => None,
+			GameEntity::Npc(_npc) => None
 		}
 	}
 }
@@ -90,7 +97,8 @@ impl HasZIndex for GameEntity {
 		match self {
 			GameEntity::Box(box_) => box_.z_index,
 			GameEntity::Player(player) => player.hitbox().y,
-			GameEntity::StaticObstacle(obstacle) => obstacle.hitbox().y
+			GameEntity::StaticObstacle(obstacle) => obstacle.hitbox().y,
+			GameEntity::Npc(npc) => npc.hitbox().y
 		}
 	}
 }

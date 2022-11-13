@@ -14,4 +14,5 @@ pub struct BlockMap {
 	pub width: u32,
 	pub height: u32,
 	pub static_obstacle_ids: Vec<String>,
+	pub npc_ids: Vec<String>,
 }

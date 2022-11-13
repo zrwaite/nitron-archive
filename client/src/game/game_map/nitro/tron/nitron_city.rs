@@ -1,4 +1,4 @@
-use crate::{game::BlockMap, entities::{GameEntity, generate_rock}, utils::{Vector2, Vector3}};
+use crate::{game::BlockMap, entities::{GameEntity, generate_rock, generate_home, generate_steve}, utils::{Vector2, Vector3}};
 use crate::entities::hash_vec::HasId;
 
 pub fn nitron_city() -> (Vec<BlockMap>, Vec<GameEntity>) {
@@ -17,17 +17,30 @@ pub fn nitron_city() -> (Vec<BlockMap>, Vec<GameEntity>) {
 }
 
 pub fn home_block_map() -> (BlockMap, Vec<GameEntity>) {
-	let static_obstacles = Vec::from(
-		[generate_rock(Vector2::new(200, 200), Vector3::new(40, 20, 15))]
-	);
+	let static_obstacles = Vec::from([
+		generate_rock(Vector2::new(200, 200), Vector3::new(40, 20, 15)),
+		generate_home(Vector2::new(300, 200), Vector3::new(100, 100, 30))
+	]);
 	let static_obstacle_ids = static_obstacles.iter().map(|entity| entity.id()).collect();
-	let entities = static_obstacles.into_iter().map(|entity| GameEntity::StaticObstacle(entity)).collect();
+	let npcs = Vec::from([
+		generate_steve(Vector2::new(100, 100))
+	]);
+	let npc_ids = npcs.iter().map(|entity| entity.id()).collect();
+
+	let mut entities: Vec<GameEntity> = vec![];
+
+	let static_obstacles_entities: Vec<GameEntity> = static_obstacles.into_iter().map(|entity| GameEntity::StaticObstacle(entity)).collect();
+	let npcs_entities: Vec<GameEntity> = npcs.into_iter().map(|entity| GameEntity::Npc(entity)).collect();
+
+	entities.append(&mut static_obstacles_entities.to_vec());
+	entities.append(&mut npcs_entities.to_vec());
 	(
 		BlockMap {
 			slug: String::from("home"),
 			width: 400,
 			height: 300,
 			static_obstacle_ids,
+			npc_ids,
 		},
 		entities
 	)

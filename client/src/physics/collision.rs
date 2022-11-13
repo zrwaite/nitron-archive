@@ -1,5 +1,19 @@
+use crate::entities::{StaticObstacle, Npc};
 use crate::utils::{Vector4};
 use crate::entities::player::Player;
+
+pub enum CollisionObject<'a> {
+	Static(&'a StaticObstacle),
+	Dynamic(&'a Npc),
+}
+impl CollisionObject<'_> {
+	pub fn hitbox(&self) -> Vector4 {
+		match self {
+			CollisionObject::Static(obstacle) => obstacle.hitbox(),
+			CollisionObject::Dynamic(npc) => npc.hitbox(),
+		}
+	}
+}
 
 #[derive(Debug, PartialEq)]
 pub enum CollisionResult {

@@ -21,7 +21,7 @@ pub struct Game {
 
 impl Game {
 	pub fn new()-> (Self, Vec<GameEntity>) {
-		let player = Player::new(Vector2::new(100, 100), Vector3::new(32, 40, 10), String::from(TEXTURES.player));
+		let player = Player::new(Vector2::new(200, 150), Vector3::new(32, 40, 10), String::from(TEXTURES.player));
 
 		let (blocks, map_entities) = load_chunk("nitron_city".to_string()).unwrap();
 		let mut entities = vec![
