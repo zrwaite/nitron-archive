@@ -6,3 +6,5 @@ pub mod game_entity;
 pub use game_entity::*;
 pub mod hash_vec;
 pub use hash_vec::*;
+pub mod sprite_display;
+pub use sprite_display::*;

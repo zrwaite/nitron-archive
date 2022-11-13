@@ -35,14 +35,14 @@ pub fn run_physics(game_entities: &mut HashVec, engine_state: &mut EngineState) 
             if hitbox.x < hitbox.w / 2  {
                 player.set_x_by_hitbox(hitbox.w / 2);
             }
-            if hitbox.x + hitbox.w / 2 > game.map.width as i32 {
-                player.set_x_by_hitbox(game.map.width as i32 - hitbox.w / 2);
+            if hitbox.x + hitbox.w / 2 > game.block().width as i32 {
+                player.set_x_by_hitbox(game.block().width as i32 - hitbox.w / 2);
             }
             if hitbox.y < hitbox.h / 2 {
                 player.set_y_by_hitbox(hitbox.h / 2);
             }
-            if hitbox.y + hitbox.h /2 > game.map.height as i32 {
-                player.set_y_by_hitbox(game.map.height as i32 - hitbox.h / 2);
+            if hitbox.y + hitbox.h /2 > game.block().height as i32 {
+                player.set_y_by_hitbox(game.block().height as i32 - hitbox.h / 2);
             }
         }
         _ => {}

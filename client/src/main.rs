@@ -70,7 +70,7 @@ fn main() -> Result<(), String> {
         match event_event {
             EngineEvent::Quit => break 'engine_loop,
             EngineEvent::Play => {
-                let (game, game_entities) = Game::new(400, 300);
+                let (game, game_entities) = Game::new();
                 engine.game_entities.clear();
                 engine.game_entities = HashVec::new(game_entities);
                 engine.state = EngineState::Playing(game);

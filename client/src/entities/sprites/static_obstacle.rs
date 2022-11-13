@@ -10,7 +10,7 @@ use crate::entities::HasId;
 use crate::physics::Hitbox;
 use crate::utils::new_id;
 
-use super::SpriteDisplay;
+use super::super::SpriteDisplay;
 
 #[derive(Debug, Clone)]
 pub struct StaticObstacle {
