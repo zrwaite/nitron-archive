@@ -45,7 +45,7 @@ impl Player {
 				h: size.z as u32,
 				y_offset: size.y / 2 - size.z / 2,
 				x_offset: 0,
-				radius: (size.x + size.y) as u32,
+				radius: (size.x + size.y) as u32 * 4,
 			},
 		}
 	}

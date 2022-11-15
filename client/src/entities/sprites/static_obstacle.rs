@@ -53,7 +53,7 @@ impl StaticObstacle {
 				h: (size.z as f32 * 0.8) as u32,
 				y_offset: size.y / 2 - size.z / 2,
 				x_offset: 0,
-				radius: (size.x + size.y) as u32,
+				radius: ((size.x + size.y) as f32 * 2.5) as u32,
 			},
 			frame: frame_region
 		}

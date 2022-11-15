@@ -12,12 +12,15 @@ pub fn run_physics(game_entities: &mut HashVec, engine_state: &mut EngineState) 
             for entity in game_entities.iter_mut() {
                 match entity {
                     GameEntity::StaticObstacle(obstacle) => {
+                        //TODO Quad tree push
                         collision_objects.push(CollisionObject::Static(obstacle));
                     }
                     GameEntity::Npc(obj) => {
+                        //TODO Quad tree push
                         collision_objects.push(CollisionObject::Dynamic(obj));
                     }
                     GameEntity::Player(obj) => {
+                        //TODO Quad tree push
                         player_option = Some(obj);
                     }
                     _ => {}
