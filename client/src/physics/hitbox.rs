@@ -6,6 +6,7 @@ pub struct Hitbox {
 	pub h: u32,
 	pub y_offset: i32,
 	pub x_offset: i32,
+	pub radius: u32,
 }
 
 impl Hitbox {

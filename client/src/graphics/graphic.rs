@@ -27,6 +27,7 @@ pub struct Graphic {
 	pub src: Rect, 
 	pub dst: Rect,
 	pub hitbox_dst: Rect,
+	pub radius_dst: Rect,
 	pub z_index: i32,
 }
 
