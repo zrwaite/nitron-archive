@@ -2,7 +2,7 @@ use sdl2::{EventPump};
 use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 
-use crate::engine::EngineEvent;
+use crate::engine::{EngineEvent, EngineFn};
 use crate::graphics::scale;
 use crate::entities::HashVec;
 
@@ -14,12 +14,14 @@ pub fn handle_events (
 	game_entities: &mut HashVec,
 	x_scale: f64,
 	y_scale: f64
-) -> Result<EngineEvent, String> {
+) -> Vec<EngineFn> {
+	//TODO handle multiple events
+	// let mut engine_fns = Vec::new();
 	for event in event_pump.poll_iter() {
 		match event {
 			Event::Quit {..} |
 			Event::KeyDown { keycode: Some(Keycode::Escape), .. } => {
-				return Ok(EngineEvent::Quit);
+				return vec![EngineFn::empty_new(EngineEvent::Quit)];
 			},
 			Event::KeyDown { keycode: Some(Keycode::Left), repeat: false, .. } => {
 				presses.left = true;
@@ -51,7 +53,7 @@ pub fn handle_events (
 				for game_entity in game_entities.iter_mut() {
 					let engine_event = game_entity.mouse_move(scale(x, 1.0/x_scale),scale(y, 1.0/y_scale));
 					if engine_event.is_some() {
-						return Ok(engine_event.unwrap())
+						return vec![engine_event.unwrap()];
 					}
 				}
 			},
@@ -61,7 +63,7 @@ pub fn handle_events (
 				for game_entity in game_entities.iter_mut() {
 					let engine_event = game_entity.mouse_down(scale(x, 1.0/x_scale),scale(y, 1.0/y_scale));
 					if engine_event.is_some() {
-						return Ok(engine_event.unwrap())
+						return vec![engine_event.unwrap()];
 					}
 				}
 			},
@@ -71,12 +73,12 @@ pub fn handle_events (
 				for game_entity in game_entities.iter_mut() {
 					let engine_event = game_entity.mouse_up(scale(x, 1.0/x_scale),scale(y, 1.0/y_scale));
 					if engine_event.is_some() {
-						return Ok(engine_event.unwrap())
+						return vec![engine_event.unwrap()];
 					}
 				}
 			},
 			_ => {}
 		}
 	}
-	Ok(EngineEvent::None)
+	vec![EngineFn::empty_new(EngineEvent::None)]
 }

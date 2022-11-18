@@ -8,7 +8,7 @@ use crate::input::MouseActions;
 use crate::physics::InteractionHitbox;
 use crate::ui::UIBox;
 use crate::entities::{Player, StaticObstacle};
-use crate::engine::EngineEvent;
+use crate::engine::{EngineEvent, EngineFn};
 use crate::utils::{Vector2, Vector4};
 use super::{HasId, Npc};
 
@@ -98,7 +98,7 @@ impl MouseActions for GameEntity {
 			GameEntity::Npc(npc) => npc.contains_point(x, y)
 		}
 	}
-	fn mouse_down(&mut self, x: i32, y: i32) -> Option<EngineEvent>{
+	fn mouse_down(&mut self, x: i32, y: i32) -> Option<EngineFn>{
 		match self {
 			GameEntity::Box(box_) => box_.mouse_down(x, y),
 			GameEntity::Player(_player) => None,
@@ -107,7 +107,7 @@ impl MouseActions for GameEntity {
 		}
 	}
 
-	fn mouse_up(&mut self, x: i32, y: i32) -> Option<EngineEvent>{
+	fn mouse_up(&mut self, x: i32, y: i32) -> Option<EngineFn>{
 		match self {
 			GameEntity::Box(box_) => box_.mouse_up(x, y),
 			GameEntity::Player(_player) => None,
@@ -116,7 +116,7 @@ impl MouseActions for GameEntity {
 		}
 	}
 
-	fn mouse_move(&mut self, x: i32, y: i32) -> Option<EngineEvent>{
+	fn mouse_move(&mut self, x: i32, y: i32) -> Option<EngineFn>{
 		match self {
 			GameEntity::Box(box_) => box_.mouse_move(x, y),
 			GameEntity::Player(_player) => None,

@@ -10,7 +10,7 @@ use crate::graphics::{scale, scale_u, Renderable};
 use crate::ui::{styles::UIStyles};
 use crate::input::{MouseActions, MouseDetails};
 use crate::entities::HasId;
-use crate::engine::EngineEvent;
+use crate::engine::{EngineEvent, EngineFn};
 
 use super::text_element::TextElement;
 
@@ -23,6 +23,7 @@ pub struct UIBox {
 	pub initial_styles: UIStyles,
 	pub mouse_details: MouseDetails,
 	pub z_index: i32,
+	on_click: Option<EngineFn>,
 }
 
 
@@ -32,6 +33,7 @@ impl UIBox {
 		children: Vec<u32>,
 		text_node: Option<TextElement>,
 		styles: UIStyles,
+		on_click: Option<EngineFn>,
 	) -> Self {
 		Self {
 			id,
@@ -41,6 +43,7 @@ impl UIBox {
 			initial_styles: styles,
 			mouse_details: MouseDetails::new(),
 			z_index: 10000,
+			on_click,
 		}
 	}
 	pub fn get_scaled_rect(&self, x_scale: f64, y_scale: f64) -> Rect {
@@ -55,6 +58,13 @@ impl UIBox {
 	pub fn get_rect(&self) -> Rect {
 		self.styles.dimensions
 	}
+	pub fn move_box(&mut self, x: i32, y: i32) {
+		self.styles.dimensions.offset(x, y);
+		self.initial_styles.dimensions.offset(x, y);
+		if self.text_node.is_some() {
+			self.text_node.as_mut().unwrap().move_text(x, y);
+		}
+	}	
 }
 
 impl Renderable for UIBox {
@@ -78,20 +88,20 @@ impl MouseActions for UIBox {
 	fn contains_point(&self, x: i32, y: i32) -> bool {
 		self.get_rect().contains_point((x, y))
 	}
-	fn mouse_down(&mut self, x: i32, y: i32) -> Option<EngineEvent> {
+	fn mouse_down(&mut self, x: i32, y: i32) -> Option<EngineFn> {
 		if self.contains_point(x, y) {
 			self.mouse_details.clicked = true;
 		}
 		None
 	}
-	fn mouse_up(&mut self, x: i32, y: i32) -> Option<EngineEvent> {
+	fn mouse_up(&mut self, x: i32, y: i32) -> Option<EngineFn> {
 		if self.contains_point(x, y) && self.mouse_details.clicked {
 			self.mouse_details.clicked = false;
-			return Some(EngineEvent::Play);
+			return self.on_click.clone();
 		}
 		None
 	}
-	fn mouse_move(&mut self, x: i32, y: i32) -> Option<EngineEvent> {
+	fn mouse_move(&mut self, x: i32, y: i32) -> Option<EngineFn> {
 		if self.contains_point(x, y) {
 			self.styles.color.r = 255 - (255 - self.initial_styles.color.r) / 2 ;
 			self.styles.color.g = 255 - (255 - self.initial_styles.color.g) / 2 ;

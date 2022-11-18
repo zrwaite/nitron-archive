@@ -1,3 +1,4 @@
+use serde::{Deserialize, Serialize};
 use specs_derive::Component;
 use specs::prelude::{Component, VecStorage};
 use std::ops;
@@ -12,7 +13,7 @@ pub enum Direction {
 }
 
 
-#[derive(Component, Debug, Clone, Copy)]
+#[derive(Component, Debug, Clone, Copy, Serialize, Deserialize)]
 #[storage(VecStorage)]
 pub struct Vector2 {
     pub x: i32,

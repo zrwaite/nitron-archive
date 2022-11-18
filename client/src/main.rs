@@ -9,6 +9,7 @@ mod utils;
 mod engine;
 mod ui;
 mod game;
+mod data;
 
 use std::env;
 use sdl2::image::{self, InitFlag};
@@ -70,6 +71,7 @@ fn main() -> Result<(), String> {
         match event_event {
             EngineEvent::Quit => break 'engine_loop,
             EngineEvent::Play => {
+                
                 let (game, game_entities) = Game::new();
                 engine.game_entities.clear();
                 engine.game_entities = HashVec::new(game_entities);

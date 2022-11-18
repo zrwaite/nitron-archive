@@ -33,6 +33,34 @@ pub enum EngineEvent {
 	None
 }
 
+#[derive(Clone)]
+pub struct EngineFn {
+	func: fn (engine: &mut Engine) -> EngineEvent
+}
+impl EngineFn {
+	pub fn new(func: fn (engine: &mut Engine) -> EngineEvent) -> Self {
+		Self {
+			func
+		}
+	}
+	pub fn run(&self, engine: &mut Engine) -> EngineEvent {
+		(self.func)(engine)
+	}
+	pub fn empty_new(event: EngineEvent) -> Self {
+		match event {
+			EngineEvent::Quit => Self::new(|_| {
+				EngineEvent::Quit
+			}),
+			EngineEvent::Play => Self::new(|_| {
+				EngineEvent::Play
+			}),
+			EngineEvent::None => Self::new(|_| {
+				EngineEvent::None
+			})
+		}
+	}
+}
+
 pub struct Engine {
 	pub state: EngineState,
 	pub game_entities: HashVec,
@@ -75,16 +103,19 @@ impl Engine {
 			let y_scale = screen_height as f64 / self.height as f64;
 
 			// Handle input events
-			match handle_events(
+			let engine_fns = handle_events(
 				&mut event_pump, 
 				&mut presses, 
 				&mut self.game_entities,
 				x_scale,
 				y_scale
-			).unwrap() {
-				EngineEvent::Quit => return Ok(EngineEvent::Quit),
-				EngineEvent::Play => return Ok(EngineEvent::Play),
-				EngineEvent::None => (),
+			);
+			for engine_fn in engine_fns.into_iter() {
+				match engine_fn.run(self) {
+					EngineEvent::Quit => return Ok(EngineEvent::Quit),
+					EngineEvent::Play => return Ok(EngineEvent::Play),
+					EngineEvent::None => (),
+				}
 			}
 		
 			// Update

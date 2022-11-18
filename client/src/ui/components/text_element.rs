@@ -32,6 +32,9 @@ impl TextElement {
 			},
 		}
 	}
+	pub fn move_text(&mut self, x: i32, y: i32) {
+		self.styles.dimensions.offset(x, y);
+	}	
 }
 impl Renderable for TextElement {
 	fn render(&self, 
