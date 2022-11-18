@@ -11,7 +11,7 @@ use crate::assets::TEXTURES;
 use crate::utils::{Vector2, Vector3, Vector4};
 use crate::graphics::{Renderable, scale, scale_u, Graphic};
 use crate::entities::HasId;
-use crate::physics::Hitbox;
+use crate::physics::{Hitbox, InteractionHitbox};
 use crate::entities::MovingSpriteDisplay;
 use crate::utils::new_id;
 
@@ -25,6 +25,7 @@ pub struct Npc {
 	pub vel: Vector2,
 	pub animator: NpcAnimator,
 	hitbox: Hitbox,
+	player_interaction: bool
 	// pub stats: CharacterStats,
 }
 
@@ -48,10 +49,14 @@ impl Npc {
 				x_offset: 0,
 				radius: (size.x + size.y) as u32 * 4,
 			},
+			player_interaction: false
 		}
 	}
 	pub fn hitbox(&self) -> Vector4 {
 		self.hitbox.to_v4(self.pos)
+	}
+	pub fn interaction_hitbox(&self) -> InteractionHitbox {
+		InteractionHitbox::from_hitbox(&self.hitbox, self.pos)
 	}
 	pub fn set_x_by_hitbox(&mut self, x: i32) {
 		self.pos.x = x - self.hitbox.x_offset;
@@ -67,6 +72,12 @@ impl Npc {
 			self.display.size.y as u32,
 		);
 		rect.contains_point((x, y))
+	}
+	pub fn enable_player_interaction(&mut self) {
+		self.player_interaction = true;
+	}
+	pub fn disable_player_interaction(&mut self) {
+		self.player_interaction = false;
 	}
 }
 

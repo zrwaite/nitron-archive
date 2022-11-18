@@ -2,7 +2,7 @@ use crate::entities::Player;
 use crate::entities::{GameEntity,HashVec};
 use crate::engine::EngineState;
 
-use super::collision::{player_static_obstacle_collision, CollisionObject};
+use super::collision::{player_obstacle_collision, CollisionObject, player_obstacle_interaction};
 pub fn run_physics(game_entities: &mut HashVec, engine_state: &mut EngineState) {  
 
     match engine_state {
@@ -34,7 +34,26 @@ pub fn run_physics(game_entities: &mut HashVec, engine_state: &mut EngineState) 
             for obstacle in collision_objects.iter_mut() {
                 //TODO Make this more efficient: Quad tree? 
                 // collision detection
-                player_static_obstacle_collision(player, &mut obstacle.hitbox());
+                player_obstacle_collision(player, &mut obstacle.hitbox());
+                if player_obstacle_interaction(&player.interaction_hitbox(), &obstacle.interaction_hitbox()) {
+                    match obstacle {
+                        CollisionObject::Static(obstacle) => {
+                            obstacle.enable_player_interaction();
+                        }
+                        CollisionObject::Dynamic(npc) => {
+                            npc.enable_player_interaction();
+                        }
+                    }
+                } else {
+                    match obstacle {
+                        CollisionObject::Static(obstacle) => {
+                            obstacle.disable_player_interaction();
+                        }
+                        CollisionObject::Dynamic(npc) => {
+                            npc.disable_player_interaction();
+                        }
+                    }
+                }
             }
 
             player.pos.offset(player.vel.x, player.vel.y);

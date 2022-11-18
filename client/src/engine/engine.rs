@@ -101,6 +101,7 @@ impl Engine {
 				self.width,
 				self.height,
 				true
+				// false
 			)?;
 			
 			// Time management

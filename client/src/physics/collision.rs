@@ -2,15 +2,23 @@ use crate::entities::{StaticObstacle, Npc};
 use crate::utils::{Vector4};
 use crate::entities::player::Player;
 
+use super::{InteractionHitbox};
+
 pub enum CollisionObject<'a> {
-	Static(&'a StaticObstacle),
-	Dynamic(&'a Npc),
+	Static(&'a mut StaticObstacle),
+	Dynamic(&'a mut Npc),
 }
 impl CollisionObject<'_> {
 	pub fn hitbox(&self) -> Vector4 {
 		match self {
 			CollisionObject::Static(obstacle) => obstacle.hitbox(),
 			CollisionObject::Dynamic(npc) => npc.hitbox(),
+		}
+	}
+	pub fn interaction_hitbox(&self) -> InteractionHitbox {
+		match self {
+			CollisionObject::Static(obstacle) => obstacle.interaction_hitbox(),
+			CollisionObject::Dynamic(npc) => npc.interaction_hitbox(),
 		}
 	}
 }
@@ -54,7 +62,7 @@ pub fn detect_collision(hitbox_a: &Vector4, hitbox_b: &Vector4) -> CollisionResu
 
 }
 
-pub fn player_static_obstacle_collision(player: &mut Player, obstacle_hitbox: &Vector4) {
+pub fn player_obstacle_collision(player: &mut Player, obstacle_hitbox: &Vector4) {
 	let hitbox = player.hitbox();
 	match detect_collision(&hitbox, obstacle_hitbox) {
 		CollisionResult::Top => {
@@ -71,4 +79,12 @@ pub fn player_static_obstacle_collision(player: &mut Player, obstacle_hitbox: &V
 		},
 		CollisionResult::None => {}
 	}
+}
+
+pub fn player_obstacle_interaction(player: &InteractionHitbox, obstacle: &InteractionHitbox) -> bool {
+	let distance = ((player.x - obstacle.x).pow(2) + (player.y - obstacle.y).pow(2)) as f32;
+	if distance < obstacle.r as f32 {
+		return true;
+	}
+	return false;
 }

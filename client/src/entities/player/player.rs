@@ -11,7 +11,7 @@ use crate::assets::TEXTURES;
 use crate::utils::{Vector2, Vector3, Vector4};
 use crate::graphics::{Renderable, scale, scale_u, Graphic};
 use crate::entities::HasId;
-use crate::physics::Hitbox;
+use crate::physics::{Hitbox, InteractionHitbox};
 use crate::entities::MovingSpriteDisplay;
 use crate::utils::new_id;
 
@@ -51,6 +51,9 @@ impl Player {
 	}
 	pub fn hitbox(&self) -> Vector4 {
 		self.hitbox.to_v4(self.pos)
+	}
+	pub fn interaction_hitbox(&self) -> InteractionHitbox {
+		InteractionHitbox::from_hitbox(&self.hitbox, self.pos)
 	}
 	pub fn set_x_by_hitbox(&mut self, x: i32) {
 		self.pos.x = x - self.hitbox.x_offset;

@@ -1,10 +1,16 @@
 use std::collections::HashMap;
+use sdl2::rect::Rect;
 use sdl2::ttf::Font;
 use sdl2::pixels::Color;
 use sdl2::render::{WindowCanvas, Texture};
 
+use crate::assets::TEXTURES;
 use crate::entities::{HashVec, HasId};
 use crate::graphics::graphic::{Renderable,HasZIndex};
+use crate::physics::InteractionHitbox;
+use crate::utils::{Vector2, Vector4};
+
+use super::{scale, scale_u, Graphic};
 
 pub struct GraphicIndex {
     pub id: String,
@@ -54,4 +60,44 @@ pub fn render(
     canvas.present();
 
     Ok(())
+}
+
+pub fn simple_render( 
+    canvas: &mut WindowCanvas,
+    pos: Vector2,
+    texture_key: String,
+    display_size: Vector2,
+    frame: Rect,
+    hitbox: Vector4,
+    interaction_hitbox: InteractionHitbox,
+    textures: &HashMap<String, Texture>,
+    _fonts: &HashMap<String, Font>,
+    x_scale: f64,
+    y_scale: f64,
+    debug: bool
+) {
+    let hitbox_rect = hitbox.get_scaled(x_scale, y_scale).to_rect();
+    let screen_rect = Rect::from_center(
+        (
+            scale(pos.x, x_scale),
+            scale(pos.y, y_scale),
+        ),
+        scale_u(display_size.x, x_scale),
+        scale_u(display_size.y, y_scale),
+    );
+
+    let graphic = Graphic {
+        texture_key: texture_key.to_string(),
+        src: frame,
+        dst: screen_rect,
+        hitbox_dst: hitbox_rect,
+        radius_dst: interaction_hitbox.to_scaled_rect(x_scale, y_scale),
+        z_index: hitbox.y,
+    };
+    canvas.copy(&textures[&graphic.texture_key], graphic.src, graphic.dst).unwrap();
+    if debug {
+        canvas.set_draw_color(Color::RGB(0, 0, 255));
+        canvas.draw_rect(graphic.hitbox_dst).unwrap();
+        canvas.copy(&textures[TEXTURES.circle], Rect::new(0, 0, 32, 32), graphic.radius_dst).unwrap();
+    }
 }
