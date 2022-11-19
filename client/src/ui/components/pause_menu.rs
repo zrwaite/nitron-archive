@@ -2,6 +2,7 @@ use sdl2::{rect::Rect};
 
 use sdl2::pixels::Color;
 
+use crate::data::write_game_data;
 use crate::entities::hash_vec::HasId;
 use crate::{GAME_WIDTH, GAME_HEIGHT};
 use crate::engine::EngineFn;
@@ -19,9 +20,35 @@ pub fn create_pause_menu() -> (Vec<UIBox>, String) {
 		})),
 	);
 	play_button.set_display(false);
+
+	let mut quit_button = create_text_button(
+		Rect::from_center((100, 20), 80, 40),
+		Color::RGB(0, 200, 250),
+		"Quit".to_string(),
+		Some(EngineFn::new(|engine| {
+			engine.quit();
+			println!("quit");
+		})),
+	);
+	quit_button.set_display(false);
+
+	let mut save_button = create_text_button(
+		Rect::from_center((240, 20), 120, 40),
+		Color::RGB(0, 200, 250),
+		"Save Game".to_string(),
+		Some(EngineFn::new(|engine| {
+			let game_data = engine.state.mut_unwrap_game().to_game_data(&mut engine.game_entities);
+			write_game_data(&game_data);
+			println!("save");
+		})),
+	);
+	save_button.set_display(false);
+
 	let mut pause_menu = UIBox::new(
 		vec![
-			play_button.id()
+			play_button.id(),
+			quit_button.id(),
+			save_button.id(),
 		],
 		None,
 		UIStyles {
@@ -38,7 +65,9 @@ pub fn create_pause_menu() -> (Vec<UIBox>, String) {
 	(
 		vec![
 			pause_menu,
-			play_button
+			play_button,
+			quit_button,
+			save_button,
 		],
 		pause_menu_id
 	)

@@ -6,6 +6,8 @@ use specs_derive::Component;
 
 use crate::entities::GameEntity;
 
+use super::Player;
+
 pub trait HasId {
 	fn id(&self) -> String;
 }
@@ -104,5 +106,8 @@ impl HashVec {
 	pub fn clear(&mut self) {
 		self.vec.clear();
 		self.clear_cache();
+	}
+	pub fn player(&mut self, player_id: String) -> &mut Player {
+		self.get(player_id.clone()).unwrap().mut_unwrap_player()
 	}
 }

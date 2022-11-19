@@ -10,6 +10,7 @@ use crate::assets::TEXTURES;
 use crate::data::GameData;
 use crate::engine::EngineFn;
 use crate::entities::GameEntity;
+use crate::entities::HashVec;
 use crate::entities::Player;
 use crate::entities::HasId;
 use crate::ui::UIBox;
@@ -25,6 +26,7 @@ use super::load_chunk;
 #[derive(Component)]
 pub struct Game {
 	pub player_id: String,
+	pub chunk_slug: String,
 	pub blocks: Vec<BlockMap>,
 	pub pause_menu_id: String,
 	pub game_screen_id: String,
@@ -53,7 +55,7 @@ impl Game {
 		let (pause_menu_boxes, pause_menu_id) = create_pause_menu();
 		let mut pause_menu_box_entities: Vec<GameEntity> = pause_menu_boxes.into_iter().map(|box_| GameEntity::Box(box_)).collect();
 
-		let (blocks, map_entities) = load_chunk(game_data.chunk_slug).unwrap();
+		let (blocks, map_entities) = load_chunk(game_data.chunk_slug.clone()).unwrap();
 		let pause_button = create_text_button(
 			Rect::from_center((20, 20), 30, 30),
 			Color::RGB(0, 200, 250),
@@ -92,8 +94,17 @@ impl Game {
 				blocks,
 				pause_menu_id,
 				game_screen_id,
+				chunk_slug: game_data.chunk_slug,
 			},
 			entities
 		)
+	}
+	pub fn to_game_data(&self, game_entities: &mut HashVec) -> GameData {
+		let player = game_entities.player(self.player_id.clone());
+		GameData {
+			chunk_slug: self.chunk_slug.clone(),
+			block_index: self.block_index,
+			pos: player.pos,
+		}
 	}
 }
