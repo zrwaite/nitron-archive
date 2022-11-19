@@ -1,6 +1,6 @@
 use sdl2::rect::Rect;
 
-use crate::{utils::{Vector2, Vector4}, graphics::scale};
+use crate::{utils::{Vector2, Vector4}, graphics::{scale, scale_u}};
 
 #[derive(Debug, Clone)]
 pub struct Hitbox {
@@ -37,6 +37,6 @@ impl InteractionHitbox {
 		}
 	}
 	pub fn to_scaled_rect(&self, x_scale: f64, y_scale: f64) -> Rect {
-		Rect::from_center((scale(self.x, x_scale), scale(self.y, y_scale)), self.r, self.r)
+		Rect::from_center((scale(self.x, x_scale), scale(self.y, y_scale)), scale_u(self.r as i32, x_scale), scale_u(self.r as i32, y_scale))
 	}
 }

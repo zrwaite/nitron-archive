@@ -6,7 +6,7 @@ use sdl2::render::{WindowCanvas, Texture};
 
 use crate::{GAME_WIDTH, GAME_HEIGHT};
 use crate::assets::TEXTURES;
-use crate::entities::{HashVec, HasId};
+use crate::entities::{HashVec, HasId, GameEntity};
 use crate::graphics::graphic::{Renderable,HasZIndex};
 use crate::physics::InteractionHitbox;
 use crate::utils::{Vector2, Vector4};
@@ -23,14 +23,15 @@ pub fn render(
     textures: &HashMap<String, Texture>,
     fonts: &HashMap<String, Font>,
     elements: &mut HashVec,
+    map_width: u32,
+	map_height: u32,
     debug: bool,
 ) -> Result<(), String> {
     canvas.set_draw_color(Color::RGB(100, 100, 100));
     canvas.clear();
     let (screen_width, screen_height) = canvas.output_size()?;
 
-    let x_scale = screen_width as f64 / GAME_WIDTH as f64;
-    let y_scale = screen_height as f64 / GAME_HEIGHT as f64;
+    
 
 
     // TODO: Hargun, make this more efficient
@@ -46,6 +47,18 @@ pub fn render(
 
     for element_graphic in element_graphics {
         let element = elements.get(element_graphic.id).unwrap();
+        let (x_scale, y_scale) = match element {
+            GameEntity::Box(_) => {
+                let x_scale = screen_width as f64 / GAME_WIDTH as f64;
+                let y_scale = screen_height as f64 / GAME_HEIGHT as f64;
+                (x_scale, y_scale)
+            }
+            _ => {
+                let x_scale = screen_width as f64 / map_width as f64;
+                let y_scale = screen_height as f64 / map_height as f64;
+                (x_scale, y_scale)
+            }
+        };
         element.render(
             canvas,
             textures,

@@ -48,9 +48,6 @@ impl EngineFn {
 	pub fn run(&self, engine: &mut Engine) {
 		(self.func)(engine)
 	}
-	pub fn empty() -> Self {
-		Self::new(|_| {})
-	}
 	pub fn quit() -> Self {
 		Self::new(|engine| {
 			engine.quit();
@@ -159,13 +156,16 @@ impl Engine {
 				run_physics(&mut self.game_entities, &mut self.state);
 				run_controller(&mut presses, &mut self.game_entities, &mut self.state);
 			}
-		
+
+			let (width, height) = self.size();
 			// Render
 			render(
 				canvas, 
 				&textures, 
 				&fonts, 
 				&mut self.game_entities, 
+				width,
+				height,
 				true
 				// false
 			).unwrap();
@@ -187,6 +187,12 @@ impl Engine {
 		let game_data = read_game_data().unwrap();
 		let (game, game_entities) = Game::from(game_data);
 		self.initialize_game(game, game_entities);
+	}
+	pub fn size(&self) -> (u32, u32) {
+		match self.state {
+			EngineState::Start(_) => (GAME_WIDTH, GAME_HEIGHT),
+			EngineState::Playing(ref game) => (game.block().width, game.block().height)
+		}
 	}
 }	
 
