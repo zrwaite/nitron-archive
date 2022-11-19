@@ -4,7 +4,6 @@ use sdl2::pixels::Color;
 
 use crate::engine::EngineFn;
 use crate::ui::{UIBox, TextElement};
-use crate::utils::new_id;
 use crate::ui::styles::UIStyles;
 
 pub fn create_text_button(
@@ -14,7 +13,6 @@ pub fn create_text_button(
 	on_click: Option<EngineFn>,
 ) -> UIBox {
 	UIBox::new(
-		new_id(),
 		vec![],
 		Some(TextElement::simple_new(
 			text,

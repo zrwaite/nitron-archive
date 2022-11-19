@@ -1,4 +1,4 @@
 pub mod components;
 pub use components::*;
-mod styles;
+pub mod styles;
 use styles::*;

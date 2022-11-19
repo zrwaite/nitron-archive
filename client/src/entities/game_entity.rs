@@ -8,7 +8,7 @@ use crate::input::MouseActions;
 use crate::physics::InteractionHitbox;
 use crate::ui::UIBox;
 use crate::entities::{Player, StaticObstacle};
-use crate::engine::{EngineEvent, EngineFn};
+use crate::engine::{EngineFn};
 use crate::utils::{Vector2, Vector4};
 use super::{HasId, Npc};
 
@@ -25,6 +25,26 @@ impl GameEntity {
 		match self {
 			GameEntity::Player(player) => player,
 			_ => panic!("expected player"),
+		}
+	}
+	pub fn mut_unwrap_box(&mut self) -> &mut UIBox {
+		match self {
+			GameEntity::Box(box_) => box_,
+			_ => panic!("expected box"),
+		}
+	}
+	pub fn unwrap_box(&self) -> &UIBox {
+		match self {
+			GameEntity::Box(box_) => box_,
+			_ => panic!("expected box"),
+		}
+	}
+	pub fn enabled(&self) -> bool {
+		match self {
+			GameEntity::Box(box_) => box_.display(),
+			GameEntity::Player(_player) => true,
+			GameEntity::StaticObstacle(_obstacle) => true,
+			GameEntity::Npc(_npc) => true,
 		}
 	}
 }

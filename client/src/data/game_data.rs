@@ -3,7 +3,7 @@ use serde::{Serialize, Deserialize};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct GameData {
-	chunk_slug: String,
-	block_index: usize,
-	pos: Vector2,
+	pub chunk_slug: String,
+	pub block_index: usize,
+	pub pos: Vector2,
 }

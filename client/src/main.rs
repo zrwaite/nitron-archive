@@ -14,11 +14,13 @@ mod data;
 use std::env;
 use sdl2::image::{self, InitFlag};
 
-use input::{KeyTracker};
-use entities::HashVec;
-use engine::{Engine, EngineState, EngineEvent};
-use game::{Game};
+use input::KeyTracker;
+use engine::Engine;
+use game::Game;
 use assets::{load_textures, load_fonts};
+
+const GAME_WIDTH: u32 = 800;
+const GAME_HEIGHT: u32 = 600;
 
 fn main() -> Result<(), String> {
     let args: Vec<String> = env::args().collect();
@@ -34,7 +36,7 @@ fn main() -> Result<(), String> {
     let ttf_context = sdl2::ttf::init().map_err(|e| e.to_string())?;
     let video_subsystem = sdl_context.video()?;
     let _image_context = image::init(InitFlag::PNG | InitFlag::JPG)?;
-    let window = video_subsystem.window("game tutorial", 800, 600)
+    let window = video_subsystem.window("game tutorial", GAME_WIDTH, GAME_HEIGHT)
     .position_centered()
     .resizable()
     .build()
@@ -51,36 +53,32 @@ fn main() -> Result<(), String> {
     // Initialize resource
     let presses = KeyTracker::new();
 
-    let mut engine = Engine::new(
-        400,
-        300,
-        presses,
-    );
+    let mut engine = Engine::new(presses);
 
     let mut event_pump = sdl_context.event_pump()?;
 
     'engine_loop: loop {
-        let event_event = engine.run(
+        let quit = engine.run(
             &mut event_pump, 
             presses, 
             &mut canvas, 
             &textures, 
             &fonts
-        )?;
+        );
 
-        match event_event {
-            EngineEvent::Quit => break 'engine_loop,
-            EngineEvent::Play => {
-                
-                let (game, game_entities) = Game::new();
-                engine.game_entities.clear();
-                engine.game_entities = HashVec::new(game_entities);
-                engine.state = EngineState::Playing(game);
-            }
-            EngineEvent::None => {
-                panic!("ended start screen without follow up event")
-            }
+        if quit {
+            break 'engine_loop;
         }
+
+        // match event_event {
+            // EngineEvent::Quit => break 'engine_loop,
+            // EngineEvent::Play => {
+                
+            // }
+            // EngineEvent::None => {
+            //     panic!("ended start screen without follow up event")
+            // }
+        // }
     }
     Ok(())
 }

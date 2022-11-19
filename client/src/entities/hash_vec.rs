@@ -23,7 +23,7 @@ impl HashVec {
 			cache: HashMap::new(),
 		}
 	}
-	fn get_index(&mut self, id:String) -> Option<usize> {
+	fn get_index_no_cache(&self, id:String) -> Option<usize> {
 		let index = self.cache.get(&id);
 		if index.is_some() {
 			return Some(*index.unwrap());
@@ -35,7 +35,6 @@ impl HashVec {
 			let mid_val = self.vec[mid].id();
 			match mid_val.cmp(&id) {
 				Ordering::Equal => {
-					self.cache.insert(id, mid);
 					return Some(mid);
 				},
 				Ordering::Greater => high = mid - 1,
@@ -43,6 +42,13 @@ impl HashVec {
 			}
 		}
 		None
+	}
+	fn get_index(&mut self, id:String) -> Option<usize> {
+		let index = self.get_index_no_cache(id.clone());
+		if index.is_some() {
+			self.cache.insert(id, index.unwrap());
+		}
+		index
 	}
 	fn _get_insert_index(&self, id:String) -> usize {
 		let mut low = 0;
@@ -57,6 +63,13 @@ impl HashVec {
 			}
 		}
 		low
+	}
+	pub fn get_non_mut(&self, id: String) -> Option<&GameEntity> {
+		let index = self.get_index_no_cache(id);
+		if index.is_some() {
+			return Some(&self.vec[index.unwrap()]);
+		}
+		None
 	}
 	pub fn get(&mut self, id: String) -> Option<&mut GameEntity> {
 		let index = self.get_index(id);
