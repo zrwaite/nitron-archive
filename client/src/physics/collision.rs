@@ -82,8 +82,8 @@ pub fn player_obstacle_collision(player: &mut Player, obstacle_hitbox: &Vector4)
 }
 
 pub fn player_obstacle_interaction(player: &InteractionHitbox, obstacle: &InteractionHitbox) -> bool {
-	let distance = ((player.x - obstacle.x).pow(2) + (player.y - obstacle.y).pow(2)) as f32;
-	if distance < obstacle.r as f32 {
+	let distance = (((player.x - obstacle.x).pow(2) + (player.y - obstacle.y).pow(2)) as f32).sqrt();
+	if distance < (obstacle.r + player.r) as f32 {
 		return true;
 	}
 	return false;

@@ -1,8 +1,12 @@
+use std::collections::HashMap;
+
 use sdl2::rect::Rect;
 use specs_derive::Component;
 use specs::Component;
 use specs::DenseVecStorage;
 
+use crate::entities::PlayerInteraction;
+use crate::ui::UIBox;
 use crate::utils::{Vector2, Vector3, Vector4};
 use crate::entities::HasId;
 use crate::physics::{Hitbox, InteractionHitbox};
@@ -19,7 +23,7 @@ pub struct Npc {
 	pub vel: Vector2,
 	pub animator: NpcAnimator,
 	hitbox: Hitbox,
-	player_interaction: bool
+	player_interaction: PlayerInteraction
 	// pub stats: CharacterStats,
 }
 
@@ -29,22 +33,26 @@ impl Npc {
 		size: Vector3,
 		texture_key: String,
 		frame_region: Rect
-	) -> Self {     
-		Npc {
-			id: new_id(),
-			display: MovingSpriteDisplay::new(texture_key, size.to_vector2()),
-			pos,
-			vel: Vector2::new(0, 0),
-			animator: NpcAnimator::new(),
-			hitbox: Hitbox {
-				w: (size.x as f32 * 0.6) as u32,
-				h: size.z as u32,
-				y_offset: size.y / 2 - size.z / 2,
-				x_offset: 0,
-				radius: (size.x + size.y) as u32,
+	) -> (Self, Vec<UIBox>) {     
+		let (player_interaction, player_interaction_ui) = PlayerInteraction::new(pos);
+		(
+			Npc {
+				id: new_id(),
+				display: MovingSpriteDisplay::new(texture_key, size.to_vector2()),
+				pos,
+				vel: Vector2::new(0, 0),
+				animator: NpcAnimator::new(),
+				hitbox: Hitbox {
+					w: (size.x as f32 * 0.6) as u32,
+					h: size.z as u32,
+					y_offset: size.y / 2 - size.z / 2,
+					x_offset: 0,
+					radius: ((size.x + size.y) / 3) as u32,
+				},
+				player_interaction
 			},
-			player_interaction: false
-		}
+			player_interaction_ui
+		)
 	}
 	pub fn hitbox(&self) -> Vector4 {
 		self.hitbox.to_v4(self.pos)
@@ -67,11 +75,11 @@ impl Npc {
 		);
 		rect.contains_point((x, y))
 	}
-	pub fn enable_player_interaction(&mut self) {
-		self.player_interaction = true;
+	pub fn enable_player_interaction(&mut self, ui_boxes: &mut HashMap<String, &mut UIBox>) {
+		self.player_interaction.on(ui_boxes);
 	}
-	pub fn disable_player_interaction(&mut self) {
-		self.player_interaction = false;
+	pub fn disable_player_interaction(&mut self, ui_boxes: &mut HashMap<String, &mut UIBox>) {
+		self.player_interaction.off(ui_boxes);
 	}
 }
 

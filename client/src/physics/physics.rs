@@ -1,6 +1,9 @@
 use crate::entities::Player;
 use crate::entities::{GameEntity,HashVec};
 use crate::engine::EngineState;
+use crate::ui::UIBox;
+use std::collections::HashMap;
+use crate::entities::hash_vec::HasId;
 
 use super::collision::{player_obstacle_collision, CollisionObject, player_obstacle_interaction};
 pub fn run_physics(game_entities: &mut HashVec, engine_state: &mut EngineState) {  
@@ -9,6 +12,7 @@ pub fn run_physics(game_entities: &mut HashVec, engine_state: &mut EngineState) 
         EngineState::Playing(game) => {
             let mut collision_objects: Vec<CollisionObject> = Vec::new();
             let mut player_option: Option<&mut Player> = None;
+            let mut ui_box_map: HashMap<String, &mut UIBox> = HashMap::new();
             for entity in game_entities.iter_mut() {
                 match entity {
                     GameEntity::StaticObstacle(obstacle) => {
@@ -23,7 +27,10 @@ pub fn run_physics(game_entities: &mut HashVec, engine_state: &mut EngineState) 
                         //TODO Quad tree push
                         player_option = Some(obj);
                     }
-                    _ => {}
+                    GameEntity::Box(_box) => {
+                        ui_box_map.insert(_box.id().clone(), _box);
+                    }
+                    // _ => {}
                 }
             }
             let player = match player_option {
@@ -41,7 +48,7 @@ pub fn run_physics(game_entities: &mut HashVec, engine_state: &mut EngineState) 
                             obstacle.enable_player_interaction();
                         }
                         CollisionObject::Dynamic(npc) => {
-                            npc.enable_player_interaction();
+                            npc.enable_player_interaction(&mut ui_box_map);
                         }
                     }
                 } else {
@@ -50,7 +57,7 @@ pub fn run_physics(game_entities: &mut HashVec, engine_state: &mut EngineState) 
                             obstacle.disable_player_interaction();
                         }
                         CollisionObject::Dynamic(npc) => {
-                            npc.disable_player_interaction();
+                            npc.disable_player_interaction(&mut ui_box_map);
                         }
                     }
                 }

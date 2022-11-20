@@ -22,8 +22,9 @@ pub fn home_block_map() -> (BlockMap, Vec<GameEntity>) {
 		generate_home(Vector2::new(300, 200), Vector3::new(100, 100, 30))
 	]);
 	let static_obstacle_ids = static_obstacles.iter().map(|entity| entity.id()).collect();
+	let (steve, steve_interaction_ui) = generate_steve(Vector2::new(100, 200));
 	let npcs = Vec::from([
-		generate_steve(Vector2::new(100, 100))
+		steve
 	]);
 	let npc_ids = npcs.iter().map(|entity| entity.id()).collect();
 
@@ -31,9 +32,12 @@ pub fn home_block_map() -> (BlockMap, Vec<GameEntity>) {
 
 	let static_obstacles_entities: Vec<GameEntity> = static_obstacles.into_iter().map(|entity| GameEntity::StaticObstacle(entity)).collect();
 	let npcs_entities: Vec<GameEntity> = npcs.into_iter().map(|entity| GameEntity::Npc(entity)).collect();
+	let steve_interaction_entities: Vec<GameEntity> = steve_interaction_ui.into_iter().map(|entity| GameEntity::Box(entity)).collect();
 
 	entities.append(&mut static_obstacles_entities.to_vec());
 	entities.append(&mut npcs_entities.to_vec());
+	entities.append(&mut steve_interaction_entities.to_vec());
+
 	(
 		BlockMap {
 			slug: String::from("home"),

@@ -37,6 +37,6 @@ impl InteractionHitbox {
 		}
 	}
 	pub fn to_scaled_rect(&self, x_scale: f64, y_scale: f64) -> Rect {
-		Rect::from_center((scale(self.x, x_scale), scale(self.y, y_scale)), scale_u(self.r as i32, x_scale), scale_u(self.r as i32, y_scale))
+		Rect::from_center((scale(self.x, x_scale), scale(self.y, y_scale)), scale_u(self.r as i32, x_scale) * 2, scale_u(self.r as i32, y_scale) * 2)
 	}
 }

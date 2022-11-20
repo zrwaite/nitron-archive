@@ -8,7 +8,7 @@ use crate::{utils::Direction};
 #[storage(VecStorage)]
 pub struct NpcAnimator {
     // The current frame in the animation of the direction this entity is moving in
-    pub current_frame: Rect,    
+    pub current_frame: Rect,
     current_frame_index: u32,
     current_timer: u32,
     max_timer: u32,
