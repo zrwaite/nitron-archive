@@ -5,6 +5,8 @@ from api.models.user import User
 from modules.hash import hash_password
 from errors import APIError
 from .mutation import mutation
+from modules.jwt import encode
+
 
 
 @convert_kwargs_to_snake_case
@@ -26,7 +28,7 @@ def create_user_resolver(obj, info, data: dict):
             db.session.commit()
             return {
                 "user": user,
-                "token": ""
+                "token": encode({"id": user.id})
             }
     except ValueError:
         raise APIError("error creating user")

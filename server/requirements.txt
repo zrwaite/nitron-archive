@@ -8,3 +8,4 @@ bcrypt
 flask_cors
 apscheduler
 sqlalchemy-cockroachdb
+pyjwt

@@ -6,7 +6,7 @@ from api.models.user import User
 from modules.hash import check_password
 from errors import APIError
 from .mutation import mutation
-
+from modules.jwt import encode
 
 @convert_kwargs_to_snake_case
 @mutation.field('login')
@@ -18,7 +18,7 @@ def login_resolver(obj, info, data):
             if valid_password:
                 return {
                     "user": user,
-                    "token": ""
+                    "token": encode({"id": user.id})
                 }
             else:
                 raise APIError("invalid password")
