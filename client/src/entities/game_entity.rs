@@ -56,6 +56,8 @@ impl Renderable for GameEntity {
     	fonts: &HashMap<String, Font>,
 		x_scale: f64,
 		y_scale: f64,
+		map_x_scale: f64,
+		map_y_scale: f64,
 		debug: bool
 	) {
 		let pos: Vector2;
@@ -66,7 +68,7 @@ impl Renderable for GameEntity {
 		let interaction_hitbox: InteractionHitbox;
 		match self {
 			GameEntity::Box(box_) => {
-				box_.render(canvas, textures, fonts, x_scale, y_scale, debug);
+				box_.render(canvas, textures, fonts, x_scale, y_scale, map_x_scale, map_y_scale, debug);
 				return
 			}
 			GameEntity::Player(player) => {
@@ -94,7 +96,7 @@ impl Renderable for GameEntity {
 				interaction_hitbox = npc.interaction_hitbox()
 			}
 		}
-		simple_render(canvas, pos, texture_key, display_size, frame, hitbox, interaction_hitbox, textures, fonts, x_scale, y_scale, debug)
+		simple_render(canvas, pos, texture_key, display_size, frame, hitbox, interaction_hitbox, textures, fonts, map_x_scale, map_y_scale, debug)
 	}
 }
 

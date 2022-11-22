@@ -4,7 +4,8 @@ use sdl2::rect::Rect;
 use sdl2::pixels::Color;
 use crate::entities::hash_vec::HasId;
 
-use crate::{ui::{UIBox, create_text_button}, utils::Vector2, engine::EngineFn};
+use crate::ui::create_text_button_game_scale;
+use crate::{ui::{UIBox}, utils::Vector2, engine::EngineFn};
 
 #[derive(Clone)]
 pub struct PlayerInteraction {
@@ -37,13 +38,14 @@ impl PlayerInteraction {
 
 fn create_interaction_popup(pos: Vector2) -> UIBox {
 	//todo Fix uibox scaling issue
-	let mut popup = create_text_button(
-		Rect::new(pos.x, pos.y, 50, 50),
-		Color::RGB(255, 255, 255),
+	let mut popup = create_text_button_game_scale(
+		Rect::from_center((pos.x, pos.y), 20, 20),
+		Color::RGBA(0, 0, 0, 0),
 		"!".to_string(),
 		Some(EngineFn::new(|_engine| {
-			// println!("Hello world")
-		}))
+			println!("Hello world")
+		})),
+		true
 	);
 	popup.z_index = 10000;
 	popup.set_display(false);

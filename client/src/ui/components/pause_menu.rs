@@ -51,13 +51,13 @@ pub fn create_pause_menu() -> (Vec<UIBox>, String) {
 			save_button.id(),
 		],
 		None,
+		Rect::new(0, 0, GAME_WIDTH, GAME_HEIGHT),
 		UIStyles {
-			dimensions: Rect::new(0, 0, GAME_WIDTH, GAME_HEIGHT),
 			padding: 0,
 			border_color: Color::RGBA(0, 0, 0, 0),
 			color: Color::RGBA(100, 100, 100, 100),
 		},
-		None,
+		None
 	);
 	let pause_menu_id = pause_menu.id();
 	pause_menu.set_display(false);

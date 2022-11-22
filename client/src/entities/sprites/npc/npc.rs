@@ -34,7 +34,7 @@ impl Npc {
 		texture_key: String,
 		frame_region: Rect
 	) -> (Self, Vec<UIBox>) {     
-		let (player_interaction, player_interaction_ui) = PlayerInteraction::new(pos);
+		let (player_interaction, player_interaction_ui) = PlayerInteraction::new(Vector2::new(pos.x, pos.y - size.y/2));
 		(
 			Npc {
 				id: new_id(),

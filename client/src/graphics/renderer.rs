@@ -47,24 +47,18 @@ pub fn render(
 
     for element_graphic in element_graphics {
         let element = elements.get(element_graphic.id).unwrap();
-        let (x_scale, y_scale) = match element {
-            GameEntity::Box(_) => {
-                let x_scale = screen_width as f64 / GAME_WIDTH as f64;
-                let y_scale = screen_height as f64 / GAME_HEIGHT as f64;
-                (x_scale, y_scale)
-            }
-            _ => {
-                let x_scale = screen_width as f64 / map_width as f64;
-                let y_scale = screen_height as f64 / map_height as f64;
-                (x_scale, y_scale)
-            }
-        };
+        let x_scale = screen_width as f64 / GAME_WIDTH as f64;
+        let y_scale = screen_height as f64 / GAME_HEIGHT as f64;
+        let map_x_scale = screen_width as f64 / map_width as f64;
+        let map_y_scale = screen_height as f64 / map_height as f64;
         element.render(
             canvas,
             textures,
             fonts,
             x_scale,
             y_scale,
+            map_x_scale,
+            map_y_scale,
             debug,
         );
     }

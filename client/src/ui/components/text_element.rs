@@ -16,24 +16,27 @@ pub struct TextElement {
 	pub font_size: u16,
 	pub font_color: Color,
 	pub styles: UIStyles,
+	pub dimensions: Rect,
+	game_scale: bool
 }
 impl TextElement {
-	pub fn simple_new(text: String, font_size: u16, font_color: Color, x: i32, y: i32) -> Self {
+	pub fn simple_new(text: String, font_size: u16, font_color: Color, x: i32, y: i32, game_scale: bool) -> Self {
 		Self {
 			text,
 			font: FONTS.electrolize.to_string(),
 			font_size,
 			font_color,
+			dimensions: Rect::from_center((x, y), 0, font_size as u32),
 			styles: UIStyles {
-				dimensions: Rect::from_center((x, y), 0, font_size as u32),
 				padding: 0,
 				border_color: Color::RGBA(0, 0, 0, 0),
 				color: Color::RGBA(0, 0, 0, 0),
 			},
+			game_scale
 		}
 	}
 	pub fn move_text(&mut self, x: i32, y: i32) {
-		self.styles.dimensions.offset(x, y);
+		self.dimensions.offset(x, y);
 	}	
 }
 impl Renderable for TextElement {
@@ -43,6 +46,8 @@ impl Renderable for TextElement {
     	fonts: &HashMap<String, Font>,
 		x_scale: f64,
 		y_scale: f64,
+		map_x_scale: f64,
+		map_y_scale: f64,
 		_debug: bool
 	) {
 		let texture_creator = canvas.texture_creator();
@@ -53,14 +58,18 @@ impl Renderable for TextElement {
 		let texture = texture_creator.create_texture_from_surface(&surface)
 			.map_err(|e| e.to_string()).unwrap();
 		let TextureQuery { width, height, .. } = texture.query();
-		let x = scale(self.styles.dimensions.center().x, x_scale);
-		let y = scale(self.styles.dimensions.center().y, y_scale);
-		let scaler = self.styles.dimensions.h as f64 / height as f64;
+		let rect_x_scale = if self.game_scale { map_x_scale } else { x_scale };
+		let rect_y_scale = if self.game_scale { map_y_scale } else { y_scale };
+		let x = scale(self.dimensions.center().x, rect_x_scale);
+		let y = scale(self.dimensions.center().y, rect_y_scale);
+		let scaler = self.dimensions.h as f64 / height as f64;
 		// add padding and proper scaling?
+		let rect_width_scale = if self.game_scale { scaler * map_x_scale } else { scaler * x_scale };
+		let rect_height_scale = if self.game_scale { scaler * map_y_scale } else { scaler * y_scale };
 		let dst = Rect::from_center(
 			(x, y), 
-			scale_u(width as i32, scaler * x_scale),
-			scale_u(height as i32, scaler * y_scale),
+			scale_u(width as i32, rect_width_scale),
+			scale_u(height as i32, rect_height_scale),
 		);
 		canvas.copy(&texture, None, dst).unwrap();
 	}

@@ -10,9 +10,19 @@ pub fn create_text_button(
 	rect: Rect,
 	color: Color,
 	text: String,
-	on_click: Option<EngineFn>,
+	on_click: Option<EngineFn>
 ) -> UIBox {
-	UIBox::new(
+	create_text_button_game_scale(rect, color, text, on_click, false)
+}
+
+pub fn create_text_button_game_scale(
+	rect: Rect,
+	color: Color,
+	text: String,
+	on_click: Option<EngineFn>,
+	game_scale: bool
+) -> UIBox {
+	UIBox::new_game_scale(
 		vec![],
 		Some(TextElement::simple_new(
 			text,
@@ -20,13 +30,15 @@ pub fn create_text_button(
 			Color::RGB(255, 255, 255),
 			rect.center().x(),
 			rect.center().y(),
+			game_scale
 		)),
+		rect,
 		UIStyles {
-			dimensions: rect,
 			padding: 0,
 			border_color: Color::RGBA(0, 0, 0, 0),
 			color,
 		},
 		on_click,
+		game_scale
 	)
 }

@@ -21,10 +21,12 @@ pub struct UIBox {
 	child_slugs: Vec<String>,
 	pub text_node: Option<TextElement>,
 	pub styles: UIStyles,
+	pub dimensions: Rect,
 	pub initial_styles: UIStyles,
 	pub mouse_details: MouseDetails,
 	pub z_index: i32,
 	on_click: Option<EngineFn>,
+	game_scale: bool,
 	display: bool,
 }
 
@@ -34,8 +36,20 @@ impl UIBox {
 		// id: String,
 		child_slugs: Vec<String>,
 		text_node: Option<TextElement>,
+		dimensions: Rect,
 		styles: UIStyles,
 		on_click: Option<EngineFn>,
+	) -> Self {
+		UIBox::new_game_scale(child_slugs, text_node, dimensions, styles, on_click, false)
+	}
+	pub fn new_game_scale(
+		// id: String,
+		child_slugs: Vec<String>,
+		text_node: Option<TextElement>,
+		dimensions: Rect,
+		styles: UIStyles,
+		on_click: Option<EngineFn>,
+		game_scale: bool
 	) -> Self {
 		Self {
 			id: new_id(),
@@ -47,23 +61,24 @@ impl UIBox {
 			z_index: 10000,
 			on_click,
 			display: true,
+			game_scale,
+			dimensions
 		}
 	}
-	pub fn get_scaled_rect(&self, x_scale: f64, y_scale: f64) -> Rect {
+	pub fn get_scaled_rect(&self, pos_x_scale: f64, pos_y_scale: f64, size_x_scale: f64, size_y_scale: f64) -> Rect {
 		Rect::from_center((
-				scale(self.styles.dimensions.center().x, x_scale), 
-				scale(self.styles.dimensions.center().y, y_scale),
+				scale(self.dimensions.center().x, pos_x_scale), 
+				scale(self.dimensions.center().y, pos_y_scale),
 			),
-			scale_u(self.styles.dimensions.w as i32, x_scale),
-			scale_u(self.styles.dimensions.h as i32, y_scale),
+			scale_u(self.dimensions.w as i32, size_x_scale),
+			scale_u(self.dimensions.h as i32, size_y_scale),
 		)
 	}
 	pub fn get_rect(&self) -> Rect {
-		self.styles.dimensions
+		self.dimensions
 	}
 	pub fn move_box(&mut self, x: i32, y: i32) {
-		self.styles.dimensions.offset(x, y);
-		self.initial_styles.dimensions.offset(x, y);
+		self.dimensions.offset(x, y);
 		if self.text_node.is_some() {
 			self.text_node.as_mut().unwrap().move_text(x, y);
 		}
@@ -86,6 +101,8 @@ impl Renderable for UIBox {
     	fonts: &HashMap<String, Font>,
 		x_scale: f64,
 		y_scale: f64,
+		map_x_scale: f64,
+		map_y_scale: f64,
 		debug: bool
 	) {
 		if !self.display {
@@ -93,9 +110,13 @@ impl Renderable for UIBox {
 		}
 		canvas.set_draw_color(self.styles.color);
 		canvas.set_blend_mode(BlendMode::Blend);
-		canvas.fill_rect(self.get_scaled_rect(x_scale, y_scale)).unwrap();
+		if self.game_scale {
+			canvas.fill_rect(self.get_scaled_rect(map_x_scale, map_y_scale, map_x_scale, map_y_scale)).unwrap();
+		} else {
+			canvas.fill_rect(self.get_scaled_rect(x_scale, y_scale, x_scale, y_scale)).unwrap();
+		}
 		if self.text_node.is_some() {
-			self.text_node.as_ref().unwrap().render(canvas, textures, fonts, x_scale, y_scale, debug);
+			self.text_node.as_ref().unwrap().render(canvas, textures, fonts, x_scale, y_scale, map_x_scale, map_y_scale, debug);
 		}
 	}
 }

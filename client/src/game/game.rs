@@ -70,9 +70,9 @@ impl Game {
 				pause_button.id()
 			],
 			None,
+			Rect::new(0, 0, GAME_WIDTH, GAME_HEIGHT),
 			UIStyles { 
 				color: Color::RGBA(0, 0, 0, 0),
-				dimensions: Rect::new(0, 0, GAME_WIDTH, GAME_HEIGHT),
 				padding: 0, 
 				border_color: Color::RGBA(0, 0, 0, 0), 
 			},

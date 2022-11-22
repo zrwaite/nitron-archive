@@ -18,6 +18,8 @@ pub trait Renderable {
     	fonts: &HashMap<String, Font>,
 		x_scale: f64,
 		y_scale: f64,
+		map_x_scale: f64,
+		map_y_scale: f64,
 		debug: bool
 	);
 }
