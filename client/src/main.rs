@@ -1,6 +1,5 @@
 mod physics;
 mod animation;
-mod controller;
 mod graphics;
 mod input;
 mod assets;

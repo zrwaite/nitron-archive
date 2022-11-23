@@ -3,6 +3,8 @@ use specs_derive::Component;
 use specs::Component;
 use specs::DenseVecStorage;
 
+use crate::input::KeyTracker;
+use crate::utils::Direction;
 use crate::utils::{Vector2, Vector3, Vector4};
 use crate::entities::HasId;
 use crate::physics::{Hitbox, InteractionHitbox};
@@ -10,6 +12,9 @@ use crate::entities::MovingSpriteDisplay;
 use crate::utils::new_id;
 
 use super::PlayerAnimator;
+
+const PLAYER_MOVEMENT_SPEED: i32 = 2;
+
 
 #[derive(Component, Clone)]
 pub struct Player {
@@ -63,6 +68,26 @@ impl Player {
 			self.display.size.y as u32,
 		);
 		rect.contains_point((x, y))
+	}
+	pub fn run_controller(&mut self, presses: &mut KeyTracker) {  
+		if presses.down {
+			self.vel.y = PLAYER_MOVEMENT_SPEED;
+			self.display.direction = Direction::Down;
+		} else if presses.up {
+			self.vel.y = - PLAYER_MOVEMENT_SPEED;
+			self.display.direction = Direction::Up;
+		} else {
+			self.vel.y = 0;
+		}
+		if presses.left {
+			self.vel.x = - PLAYER_MOVEMENT_SPEED;
+			self.display.direction = Direction::Left;
+		} else if presses.right {
+			self.vel.x = PLAYER_MOVEMENT_SPEED;
+			self.display.direction = Direction::Right;
+		} else {
+			self.vel.x = 0;
+		}   
 	}
 }
 impl HasId for Player {

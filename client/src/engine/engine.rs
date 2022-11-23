@@ -13,7 +13,6 @@ use crate::input::KeyTracker;
 use crate::graphics::render;
 use crate::input::handle_events;
 use crate::entities::{HashVec, GameEntity};
-use crate::controller::run_controller;
 use crate::physics::run_physics;
 use crate::{Game, GAME_WIDTH, GAME_HEIGHT};
 
@@ -154,7 +153,13 @@ impl Engine {
 			if !self.paused {
 				run_animator(&mut self.game_entities, &mut self.state);
 				run_physics(&mut self.game_entities, &mut self.state);
-				run_controller(&mut presses, &mut self.game_entities, &mut self.state);
+				match &self.state {
+					EngineState::Playing(game) => {
+						let player = self.game_entities.player(game.player_id.clone());
+						player.run_controller(&mut presses);
+					}
+					_ => {}
+				}
 			}
 
 			let (width, height) = self.size();

@@ -6,7 +6,7 @@ use sdl2::render::{WindowCanvas, Texture};
 
 use crate::{GAME_WIDTH, GAME_HEIGHT};
 use crate::assets::TEXTURES;
-use crate::entities::{HashVec, HasId, GameEntity};
+use crate::entities::{HashVec, HasId};
 use crate::graphics::graphic::{Renderable,HasZIndex};
 use crate::physics::InteractionHitbox;
 use crate::utils::{Vector2, Vector4};
