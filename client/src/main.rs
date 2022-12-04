@@ -11,6 +11,7 @@ mod game;
 mod data;
 
 use std::env;
+use std::path::{Path, PathBuf};
 use sdl2::image::{self, InitFlag};
 
 use input::KeyTracker;
@@ -23,14 +24,22 @@ const GAME_HEIGHT: u32 = 600;
 
 fn main() -> Result<(), String> {
     let args: Vec<String> = env::args().collect();
-    let assets_prefix;
-    let binary_filepath = args[0].clone();
-    if binary_filepath == "target/debug/nitron-client" {
+    let mut assets_prefix= PathBuf::from("assets/");
+    let binary_filepath = PathBuf::from(&args[0]);
+
+    #[cfg(target_family = "windows")]
+    if binary_filepath.ends_with("target/debug/nitron-client.exe") {
         println!("Running in dev mode");
-        assets_prefix = "assets/".to_string();
-    } else {
-        assets_prefix = String::from(binary_filepath).replace("MacOS/nitron-client", "MacOS/assets/");
     }
+
+    #[cfg(target_family = "unix")]
+    if binary_filepath.ends_with("target/debug/nitron-client") {
+        println!("Running in dev mode");
+    } else {
+        #[cfg(target_os = "macos")]
+        assets_prefix = binary_filepath.parent().unwrap().join("assets/");
+    }
+
     let sdl_context = sdl2::init()?;
     let ttf_context = sdl2::ttf::init().map_err(|e| e.to_string())?;
     let video_subsystem = sdl_context.video()?;
@@ -47,7 +56,7 @@ fn main() -> Result<(), String> {
     // initialize textures
     let texture_creator = canvas.texture_creator();
     let textures = load_textures(assets_prefix.clone(), &texture_creator);
-    let fonts = load_fonts(String::from(assets_prefix + "fonts/"), &ttf_context);
+    let fonts = load_fonts(assets_prefix.join("fonts"), &ttf_context);
 
     // Initialize resource
     let presses = KeyTracker::new();
