@@ -32,12 +32,18 @@ fn main() -> Result<(), String> {
         println!("Running in dev mode");
     }
 
+    #[cfg(target_os = "macos")]
+    if binary_filepath.ends_with("target/debug/nitron-client") {
+        println!("Running in dev mode");
+    } else {
+        assets_prefix = binary_filepath.parent().unwrap().join("assets/");
+    }
+
     #[cfg(target_family = "unix")]
     if binary_filepath.ends_with("target/debug/nitron-client") {
         println!("Running in dev mode");
     } else {
-        #[cfg(target_os = "macos")]
-        assets_prefix = binary_filepath.parent().unwrap().join("assets/");
+        // Fill in if there's any Linux specific stuff
     }
 
     let sdl_context = sdl2::init()?;
