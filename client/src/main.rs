@@ -24,7 +24,7 @@ const GAME_HEIGHT: u32 = 600;
 
 fn main() -> Result<(), String> {
     let args: Vec<String> = env::args().collect();
-    let mut assets_prefix= PathBuf::from("assets/");
+    let mut assets_prefix = PathBuf::from("client/assets/");
     let binary_filepath = PathBuf::from(&args[0]);
 
     #[cfg(target_family = "windows")]
