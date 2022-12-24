@@ -1,3 +1,7 @@
 .DS_Store
 Ideas.md
 .idea/
+target/
+
+# Windows SDL2 library
+SDL2.dll
