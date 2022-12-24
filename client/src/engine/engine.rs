@@ -1,18 +1,15 @@
-use std::collections::HashMap;
 use std::time::Duration;
 use sdl2::EventPump;
-use sdl2::render::{WindowCanvas, Texture};
-use sdl2::ttf::Font;
 use specs_derive::Component;
 use specs::Component;
 use specs::DenseVecStorage;
 
 use crate::animation::run_animator;
 use crate::data::read_game_data;
+use crate::entity_lib::EntityScreen;
+use crate::entity_lib::{EntityStore, Entity};
 use crate::input::KeyTracker;
-use crate::graphics::render;
 use crate::input::handle_events;
-use crate::entities::{HashVec, GameEntity};
 use crate::physics::run_physics;
 use crate::{Game, GAME_WIDTH, GAME_HEIGHT};
 
@@ -56,7 +53,7 @@ impl EngineFn {
 
 pub struct Engine {
 	pub state: EngineState,
-	pub game_entities: HashVec,
+	pub entity_store: EntityStore,
 	pub presses: KeyTracker,
 	quitting: bool,
 	paused: bool,
@@ -69,52 +66,51 @@ impl Engine {
 	pub fn pause(&mut self) {
 		self.paused = true;
 		let pause_menu_id = self.state.mut_unwrap_game().pause_menu_id.clone();
-		let pause_menu = self.game_entities.get(pause_menu_id).unwrap().mut_unwrap_box();
+		let pause_menu = self.entity_store.get(pause_menu_id).unwrap();
 		pause_menu.set_display(true);
 		let pause_menu_slugs = pause_menu.get_child_slugs();
 		for child_slug in pause_menu_slugs {
-			let child = self.game_entities.get(child_slug.to_string()).unwrap();
-			child.mut_unwrap_box().set_display(true);
+			let child = self.entity_store.get(child_slug.to_string()).unwrap();
+			child.set_display(true);
 		}
 		let game_screen_id = self.state.mut_unwrap_game().game_screen_id.clone();
-		let game_screen = self.game_entities.get(game_screen_id).unwrap().mut_unwrap_box();
+		let game_screen = self.entity_store.get(game_screen_id).unwrap();
 		game_screen.set_display(false);
 		let game_screen_slugs = game_screen.get_child_slugs();
 		for child_slug in game_screen_slugs {
-			let child = self.game_entities.get(child_slug.to_string()).unwrap();
-			child.mut_unwrap_box().set_display(false);
+			let child = self.entity_store.get(child_slug.to_string()).unwrap();
+			child.set_display(false);
 		}
 	}
 	pub fn unpause(&mut self) {
 		self.paused = false;
 		let pause_menu_id = self.state.mut_unwrap_game().pause_menu_id.clone();
-		let pause_menu = self.game_entities.get(pause_menu_id).unwrap().mut_unwrap_box();
+		let pause_menu = self.entity_store.get(pause_menu_id).unwrap();
 		pause_menu.set_display(false);
 		let pause_menu_slugs = pause_menu.get_child_slugs();
 		for child_slug in pause_menu_slugs {
-			let child = self.game_entities.get(child_slug.to_string()).unwrap();
-			child.mut_unwrap_box().set_display(false);
+			let child = self.entity_store.get(child_slug.to_string()).unwrap();
+			child.set_display(false);
 		}
 		let game_screen_id = self.state.mut_unwrap_game().game_screen_id.clone();
-		let game_screen = self.game_entities.get(game_screen_id).unwrap().mut_unwrap_box();
+		let game_screen = self.entity_store.get(game_screen_id).unwrap();
 		game_screen.set_display(true);
 		let game_screen_slugs = game_screen.get_child_slugs();
 		for child_slug in game_screen_slugs {
-			let child = self.game_entities.get(child_slug.to_string()).unwrap();
-			child.mut_unwrap_box().set_display(true);
+			let child = self.entity_store.get(child_slug.to_string()).unwrap();
+			child.set_display(true);
 		}
 	}
-	pub fn new(
-		presses: KeyTracker, 
-	) -> Self {
+	pub fn new() -> Self {
+
 		let (start_screen, entities) = StartScreen::new();
 
-		let game_entities = HashVec::new(entities);
+		let entity_store = EntityStore::from(entities);
 		
 		Self {
-			game_entities,
+			entity_store,
 			state: EngineState::Start(start_screen),
-			presses,
+			presses:  KeyTracker::new(),
 			quitting: false,
 			paused: false,
 		}
@@ -122,28 +118,18 @@ impl Engine {
 	pub fn run(
 		&mut self, 
 		mut event_pump: &mut EventPump, 
-		mut presses: KeyTracker,
-		canvas: &mut WindowCanvas,
-		textures: &HashMap<String, Texture>,
-		fonts: &HashMap<String, Font>,
+		mut entity_screen: &mut EntityScreen,
 	) -> bool {
 		loop {
 			if self.quitting {
 				return true;
 			}
-	
-			let (screen_width, screen_height) = canvas.output_size().unwrap();
-	
-			let x_scale = screen_width as f64 / GAME_WIDTH as f64;
-			let y_scale = screen_height as f64 / GAME_HEIGHT as f64;
 
 			// Handle input events
 			let engine_fns = handle_events(
 				&mut event_pump, 
-				&mut presses, 
-				&mut self.game_entities,
-				x_scale,
-				y_scale
+				&mut self.presses, 
+				&mut self.entity_store,
 			);
 			for engine_fn in engine_fns.into_iter() {
 				engine_fn.run(self)
@@ -151,47 +137,32 @@ impl Engine {
 		
 			// Update
 			if !self.paused {
-				run_animator(&mut self.game_entities, &mut self.state);
-				run_physics(&mut self.game_entities, &mut self.state);
-				match &self.state {
+				run_animator(&mut self.entity_store, &mut self.state);
+				run_physics(&mut self.entity_store, &mut self.state);
+				match &mut self.state {
 					EngineState::Playing(game) => {
-						let player = self.game_entities.player(game.player_id.clone());
-						player.run_controller(&mut presses);
+						(&mut game.player).run_controller(&mut self.presses);
 					}
 					_ => {}
 				}
 			}
-
-			let (width, height) = self.size();
-			// Render
-			render(
-				canvas, 
-				&textures, 
-				&fonts, 
-				&mut self.game_entities, 
-				width,
-				height,
-				true
-				// false
-			).unwrap();
-			
 			// Time management
 			::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
 		}
 	}
-	fn initialize_game(&mut self, game: Game, game_entities: Vec<GameEntity>) {
-		self.game_entities.clear();
-		self.game_entities = HashVec::new(game_entities);
+	fn initialize_game(&mut self, game: Game, entity_store: Vec<Entity>) {
+		self.entity_store.clear();
+		self.entity_store = EntityStore::from(entity_store);
 		self.state = EngineState::Playing(game);
 	}
 	pub fn new_game(&mut self) {
-		let (game, game_entities) = Game::new();
-		self.initialize_game(game, game_entities);
+		let (game, entity_store) = Game::new();
+		self.initialize_game(game, entity_store);
 	}
 	pub fn continue_game(&mut self) {
 		let game_data = read_game_data().unwrap();
-		let (game, game_entities) = Game::from(game_data);
-		self.initialize_game(game, game_entities);
+		let (game, entity_store) = Game::from(game_data);
+		self.initialize_game(game, entity_store);
 	}
 	pub fn size(&self) -> (u32, u32) {
 		match self.state {

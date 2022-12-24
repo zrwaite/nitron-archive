@@ -1,12 +1,10 @@
-use crate::entities::Player;
-use crate::entities::{GameEntity,HashVec};
+use crate::{sprites::Player, entity_lib::EntityStore};
 use crate::engine::EngineState;
-use crate::ui::UIBox;
+use crate::entity_lib::UIBox;
 use std::collections::HashMap;
-use crate::entities::hash_vec::HasId;
 
 use super::collision::{player_obstacle_collision, CollisionObject, player_obstacle_interaction};
-pub fn run_physics(game_entities: &mut HashVec, engine_state: &mut EngineState) {  
+pub fn run_physics(game_entities: &mut EntityStore, engine_state: &mut EngineState) {  
 
     match engine_state {
         EngineState::Playing(game) => {
@@ -14,24 +12,20 @@ pub fn run_physics(game_entities: &mut HashVec, engine_state: &mut EngineState) 
             let mut player_option: Option<&mut Player> = None;
             let mut ui_box_map: HashMap<String, &mut UIBox> = HashMap::new();
             for entity in game_entities.iter_mut() {
-                match entity {
-                    GameEntity::StaticObstacle(obstacle) => {
-                        //TODO Quad tree push
-                        collision_objects.push(CollisionObject::Static(obstacle));
-                    }
-                    GameEntity::Npc(obj) => {
-                        //TODO Quad tree push
-                        collision_objects.push(CollisionObject::Dynamic(obj));
-                    }
-                    GameEntity::Player(obj) => {
-                        //TODO Quad tree push
-                        player_option = Some(obj);
-                    }
-                    GameEntity::Box(_box) => {
-                        ui_box_map.insert(_box.id().clone(), _box);
-                    }
-                    // _ => {}
-                }
+                // match entity {
+                    // GameEntity::StaticObstacle(obstacle) => {
+                    //     //TODO Quad tree push
+                    //     collision_objects.push(CollisionObject::Static(obstacle));
+                    // }
+                    // GameEntity::Npc(obj) => {
+                    //     //TODO Quad tree push
+                    //     collision_objects.push(CollisionObject::Dynamic(obj));
+                    // }
+                    // GameEntity::Player(obj) => {
+                    //     //TODO Quad tree push
+                    //     player_option = Some(obj);
+                    // }
+                // }
             }
             let player = match player_option {
                 Some(player) => player,
@@ -48,7 +42,7 @@ pub fn run_physics(game_entities: &mut HashVec, engine_state: &mut EngineState) 
                             obstacle.enable_player_interaction();
                         }
                         CollisionObject::Dynamic(npc) => {
-                            npc.enable_player_interaction(&mut ui_box_map);
+                            // npc.enable_player_interaction(&mut ui_box_map);
                         }
                     }
                 } else {
@@ -57,7 +51,7 @@ pub fn run_physics(game_entities: &mut HashVec, engine_state: &mut EngineState) 
                             obstacle.disable_player_interaction();
                         }
                         CollisionObject::Dynamic(npc) => {
-                            npc.disable_player_interaction(&mut ui_box_map);
+                            // npc.disable_player_interaction(&mut ui_box_map);
                         }
                     }
                 }

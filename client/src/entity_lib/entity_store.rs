@@ -4,25 +4,25 @@ use specs::DenseVecStorage;
 use specs::Component;
 use specs_derive::Component;
 
-use crate::entities::GameEntity;
-
-use super::Player;
-
-pub trait HasId {
-	fn id(&self) -> String;
-}
+use crate::entity_lib::Entity;
 
 #[derive(Component)]
-pub struct HashVec {
-	vec: Vec<GameEntity>,
+pub struct EntityStore {
+	vec: Vec<Entity>,
 	cache: HashMap<String, usize>,
 }
-impl HashVec {
-	pub fn new(mut vec: Vec<GameEntity>) -> Self {
+impl EntityStore {
+	pub fn from(mut vec: Vec<Entity>) -> Self {
 		vec.sort_by(|a,b| a.id().cmp(&b.id()));
 		Self {
 			vec,
 			cache: HashMap::new(),
+		}
+	}
+	pub fn empty() -> Self {
+		Self {
+			vec: vec![],
+			cache: HashMap::new()
 		}
 	}
 	fn get_index_no_cache(&self, id:String) -> Option<usize> {
@@ -66,14 +66,14 @@ impl HashVec {
 		}
 		low
 	}
-	pub fn get_non_mut(&self, id: String) -> Option<&GameEntity> {
+	pub fn get_non_mut(&self, id: String) -> Option<&Entity> {
 		let index = self.get_index_no_cache(id);
 		if index.is_some() {
 			return Some(&self.vec[index.unwrap()]);
 		}
 		None
 	}
-	pub fn get(&mut self, id: String) -> Option<&mut GameEntity> {
+	pub fn get(&mut self, id: String) -> Option<&mut Entity> {
 		let index = self.get_index(id);
 		if index.is_some() {
 			return Some(&mut self.vec[index.unwrap()]);
@@ -83,13 +83,13 @@ impl HashVec {
 	fn clear_cache(&mut self) {
 		self.cache.clear();
 	}
-	pub fn _insert(&mut self, item: GameEntity) {
+	pub fn _insert(&mut self, item: Entity) {
 		self.clear_cache();
 		let id = item.id();
 		let index = self._get_insert_index(id);
 		self.vec.insert(index, item);
 	}
-	pub fn _remove(&mut self, id: String) -> Option<GameEntity> {
+	pub fn _remove(&mut self, id: String) -> Option<Entity> {
 		self.clear_cache();
 		let index = self.get_index(id);
 		if index.is_some() {
@@ -97,17 +97,17 @@ impl HashVec {
 		}
 		None
 	}
-	pub fn iter(&self) -> std::slice::Iter<GameEntity> {
+	pub fn iter(&self) -> std::slice::Iter<Entity> {
 		self.vec.iter()
 	}
-	pub fn iter_mut(&mut self) -> std::slice::IterMut<GameEntity> {
+	pub fn iter_mut(&mut self) -> std::slice::IterMut<Entity> {
 		self.vec.iter_mut()
 	}
 	pub fn clear(&mut self) {
 		self.vec.clear();
 		self.clear_cache();
 	}
-	pub fn player(&mut self, player_id: String) -> &mut Player {
-		self.get(player_id.clone()).unwrap().mut_unwrap_player()
-	}
+	// pub fn player(&mut self, player_id: String) -> &mut Player {
+	// 	self.get(player_id.clone()).unwrap().mut_unwrap_player()
+	// }
 }

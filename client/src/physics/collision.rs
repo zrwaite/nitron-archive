@@ -1,6 +1,6 @@
-use crate::entities::{StaticObstacle, Npc};
+use crate::sprites::{StaticObstacle, Npc};
 use crate::utils::{Vector4};
-use crate::entities::player::Player;
+use crate::sprites::player::Player;
 
 use super::{InteractionHitbox};
 

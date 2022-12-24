@@ -6,9 +6,8 @@ use specs::DenseVecStorage;
 use crate::input::KeyTracker;
 use crate::utils::Direction;
 use crate::utils::{Vector2, Vector3, Vector4};
-use crate::entities::HasId;
 use crate::physics::{Hitbox, InteractionHitbox};
-use crate::entities::MovingSpriteDisplay;
+use crate::sprites::MovingSpriteDisplay;
 use crate::utils::new_id;
 
 use super::PlayerAnimator;
@@ -88,10 +87,5 @@ impl Player {
 		} else {
 			self.vel.x = 0;
 		}   
-	}
-}
-impl HasId for Player {
-	fn id(&self) -> String {
-		self.id.clone()
 	}
 }
