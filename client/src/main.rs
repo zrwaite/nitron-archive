@@ -2,22 +2,21 @@ mod physics;
 mod animation;
 mod graphics;
 mod input;
-mod assets;
-mod entities;
+mod ui_components;
+mod sprites;
 mod utils;
 mod engine;
-mod ui;
+mod entity_lib;
 mod game;
 mod data;
 
 use std::env;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
+use entity_lib::EntityScreen;
 use sdl2::image::{self, InitFlag};
 
-use input::KeyTracker;
 use engine::Engine;
 use game::Game;
-use assets::{load_textures, load_fonts};
 
 const GAME_WIDTH: u32 = 800;
 const GAME_HEIGHT: u32 = 600;
@@ -46,53 +45,33 @@ fn main() -> Result<(), String> {
         // Fill in if there's any Linux specific stuff
     }
 
-    let sdl_context = sdl2::init()?;
-    let ttf_context = sdl2::ttf::init().map_err(|e| e.to_string())?;
-    let video_subsystem = sdl_context.video()?;
-    let _image_context = image::init(InitFlag::PNG | InitFlag::JPG)?;
-    let window = video_subsystem.window("game tutorial", GAME_WIDTH, GAME_HEIGHT)
-    .position_centered()
-    .resizable()
-    .build()
-    .expect("could not initialize video subsystem");
-    // TODO set mimimum resize
-
-    let mut canvas = window.into_canvas().build().expect("could not make a canvas");
+    
 
     // initialize textures
-    let texture_creator = canvas.texture_creator();
-    let textures = load_textures(assets_prefix.clone(), &texture_creator);
-    let fonts = load_fonts(assets_prefix.join("fonts"), &ttf_context);
+    // let texture_creator = canvas.texture_creator();
+
+
+    let mut entity_screen = EntityScreen::new("Nitron", GAME_WIDTH, GAME_HEIGHT);
+    entity_screen.load_textures(
+        // &texture_creator,
+        vec![
+        ("player".to_string(), assets_prefix.join("Player.png".to_string())),
+        ("obstacles".to_string(), assets_prefix.join("darkdimension.png".to_string())),
+        ("home".to_string(), assets_prefix.join("Home.png".to_string())),
+        ("npc".to_string(), assets_prefix.join("Enemy.png".to_string())),
+        ("circle".to_string(), assets_prefix.join("Circle.png".to_string())),
+    ]);
+    entity_screen.load_fonts(vec![
+        ("electrolize".to_string(), assets_prefix.join("Electrolize/Electrolize-Regular.ttf".to_string())),
+    ]);
 
     // Initialize resource
-    let presses = KeyTracker::new();
+    let mut engine = Engine::new();
+    let mut event_pump = entity_screen.get_event_pump();
 
-    let mut engine = Engine::new(presses);
-
-    let mut event_pump = sdl_context.event_pump()?;
-
-    'engine_loop: loop {
-        let quit = engine.run(
-            &mut event_pump, 
-            presses, 
-            &mut canvas, 
-            &textures, 
-            &fonts
-        );
-
-        if quit {
-            break 'engine_loop;
-        }
-
-        // match event_event {
-            // EngineEvent::Quit => break 'engine_loop,
-            // EngineEvent::Play => {
-                
-            // }
-            // EngineEvent::None => {
-            //     panic!("ended start screen without follow up event")
-            // }
-        // }
-    }
+    engine.run(
+        &mut event_pump, 
+        &mut entity_screen
+    );
     Ok(())
 }

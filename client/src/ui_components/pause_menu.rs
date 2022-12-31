@@ -3,14 +3,14 @@ use sdl2::{rect::Rect};
 use sdl2::pixels::Color;
 
 use crate::data::write_game_data;
-use crate::entities::hash_vec::HasId;
 use crate::{GAME_WIDTH, GAME_HEIGHT};
 use crate::engine::EngineFn;
-use crate::ui::{UIBox, create_text_button};
-use crate::ui::styles::UIStyles;
+use crate::entity_lib::{UIBox, Entity};
 
-pub fn create_pause_menu() -> (Vec<UIBox>, String) {
-	let mut play_button = create_text_button(
+use super::create_text_button;
+
+pub fn create_pause_menu() -> (Vec<Entity>, String) {
+	let (mut play_button, mut play_button_children) = create_text_button(
 		Rect::from_center((20, 20), 30, 30),
 		Color::RGB(0, 200, 250),
 		"|>".to_string(),
@@ -21,7 +21,7 @@ pub fn create_pause_menu() -> (Vec<UIBox>, String) {
 	);
 	play_button.set_display(false);
 
-	let mut quit_button = create_text_button(
+	let (mut quit_button, mut quit_button_children) = create_text_button(
 		Rect::from_center((100, 20), 80, 40),
 		Color::RGB(0, 200, 250),
 		"Quit".to_string(),
@@ -32,33 +32,30 @@ pub fn create_pause_menu() -> (Vec<UIBox>, String) {
 	);
 	quit_button.set_display(false);
 
-	let mut save_button = create_text_button(
+	let (mut save_button, mut save_button_children) = create_text_button(
 		Rect::from_center((240, 20), 120, 40),
 		Color::RGB(0, 200, 250),
 		"Save Game".to_string(),
 		Some(EngineFn::new(|engine| {
-			let game_data = engine.state.mut_unwrap_game().to_game_data(&mut engine.game_entities);
+			let game_data = engine.state.mut_unwrap_game().to_game_data(&mut engine.entity_store);
 			write_game_data(&game_data);
 			println!("save");
 		})),
 	);
 	save_button.set_display(false);
 
-	let mut pause_menu = UIBox::new(
-		vec![
-			play_button.id(),
-			quit_button.id(),
-			save_button.id(),
-		],
-		None,
+	let mut pause_menu = UIBox::new_entity(
 		Rect::new(0, 0, GAME_WIDTH, GAME_HEIGHT),
-		UIStyles {
-			padding: 0,
-			border_color: Color::RGBA(0, 0, 0, 0),
-			color: Color::RGBA(100, 100, 100, 100),
-		},
-		None
+		0,
+		Color::RGBA(100, 100, 100, 100),
+		Color::RGBA(0, 0, 0, 0),
+		0,
 	);
+	pause_menu.append_children(vec![
+		play_button.id(),
+		quit_button.id(),
+		save_button.id(),
+	]);
 	let pause_menu_id = pause_menu.id();
 	pause_menu.set_display(false);
 	
