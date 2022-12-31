@@ -3,17 +3,14 @@ use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 
 use crate::engine::{EngineFn};
-use crate::graphics::scale;
-use crate::entities::HashVec;
+use crate::entity_lib::EntityStore;
 
-use super::{KeyTracker,MouseActions};
+use super::{KeyTracker};
 
 pub fn handle_events (
 	event_pump: &mut EventPump, 
 	presses: &mut KeyTracker,
-	game_entities: &mut HashVec,
-	x_scale: f64,
-	y_scale: f64
+	entities: &mut EntityStore,
 ) -> Vec<EngineFn> {
 	//TODO handle multiple events
 	let mut engine_fns = Vec::new();
@@ -50,9 +47,9 @@ pub fn handle_events (
 			Event::MouseMotion { 
 				// timestamp, window_id, which, mousestate, xrel, yrel 
 				x, y, .. } => {
-				for game_entity in game_entities.iter_mut() {
-					let engine_event = game_entity.mouse_move(scale(x, 1.0/x_scale),scale(y, 1.0/y_scale));
-					if engine_event.is_some() && game_entity.enabled() {
+				for entity in entities.iter_mut() {
+					let engine_event = entity.mouse_move(x, y);
+					if engine_event.is_some() {//&& entity.enabled() {
 						engine_fns.push(engine_event.unwrap());
 					}
 				}
@@ -60,9 +57,9 @@ pub fn handle_events (
 			Event::MouseButtonDown { 
 				// timestamp, window_id, which, mouse_btn, clicks, 
 				x, y, .. } => {
-				for game_entity in game_entities.iter_mut() {
-					let engine_event = game_entity.mouse_down(scale(x, 1.0/x_scale),scale(y, 1.0/y_scale));
-					if engine_event.is_some() && game_entity.enabled() {
+				for entity in entities.iter_mut() {
+					let engine_event = entity.mouse_down(x,y);
+					if engine_event.is_some() {//&& entity.enabled() {
 						engine_fns.push(engine_event.unwrap());
 					}
 				}
@@ -70,9 +67,9 @@ pub fn handle_events (
 			Event::MouseButtonUp {
 				// timestamp, window_id, which, mouse_btn, clicks, 
 				x, y, .. } => {
-				for game_entity in game_entities.iter_mut() {
-					let engine_event = game_entity.mouse_up(scale(x, 1.0/x_scale),scale(y, 1.0/y_scale));
-					if engine_event.is_some() && game_entity.enabled() {
+				for entity in entities.iter_mut() {
+					let engine_event = entity.mouse_up(x,y);
+					if engine_event.is_some() {//&& entity.enabled() {
 						engine_fns.push(engine_event.unwrap());
 					}
 				}
