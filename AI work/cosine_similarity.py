@@ -1,17 +1,5 @@
-# import required libraries
 import numpy as np
 from numpy.linalg import norm
- 
-# define two lists or array
-A = np.array([0, 2, 8, 3, 1, 4, 3, 5])
-B = np.array([7, 8, 0, 1, 0, 0, 0, 2])
-C = np.array([4, 3, 0, 1, 0, 0, 0, 1])
-D = np.array([0, 0, 3, 0, 6, 1, 3, 1])
- 
-print("A:", A)
-print("B:", B)
-print("C:", C)
-print("D:", D)
  
 
 def find_similary(vector1, vector2):
@@ -31,4 +19,3 @@ def find_best_match(output_emotion, action_options):
 
     return {"best_match": i, "comparison_values": values}
 
-print(find_best_match(A, [B, C, D]))
