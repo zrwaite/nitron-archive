@@ -31,4 +31,9 @@ actions['use'] = [1, 0, 0, 0, 0, 0, 0, 1]
 
 data['actions'] = actions
 
+reactions = {}
+reactions['flee'] = [0, 0, 8, 0, 2, 5, 0, 1]
+reactions['attack'] = [0, 0, 2, 0, 0, 7, 9, 2]
+
+data['reactions'] = reactions
 json.dump(data, file)
