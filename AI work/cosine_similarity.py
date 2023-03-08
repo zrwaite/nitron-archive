@@ -17,5 +17,5 @@ def find_best_match(output_emotion, action_options):
             best_match_val = similarity
             best_match = i
 
-    return {"best_match": i, "comparison_values": values}
+    return {"best_match": best_match, "comparison_values": values}
 
